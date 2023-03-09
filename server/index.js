@@ -1,16 +1,12 @@
 const http = require("http");
+const mongoose = require("mongoose");
+const app = require("./app");
 
-const express = require("express");
-const cors = require("cors");
+const mongoURL = process.env.mongoURL || "mongodb://127.0.0.1:27017/chatApp";
+mongoose.connect(mongoURL);
 
-const app = express();
-
-app.use(cors({ origin: "http://localhost:3000", optionsSuccessStatus: 200 }));
-app.use(express.json());
-
-app.get("/greet", (req, res) => {
-  res.status(200).json({ message: "Hello world!" });
-});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const port = parseInt(process.env.PORT || "8000");
 const httpServer = http.createServer(app);
