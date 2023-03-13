@@ -51,4 +51,46 @@ describe(User, () => {
       expect(savedUser.password).toEqual("1234Password1234");
     });
   });
+
+  describe("field validation", () => {
+    it("cannot be saved when given an empty email", async () => {
+      const user = new User({ password: "1234Password1234" });
+      await expect(user.save()).rejects.toThrow(
+        "User validation failed: email"
+      );
+    });
+
+    it("cannot be saved when given an invalid email", async () => {
+      const user = new User({
+        email: "asdjhflaksjdhflaksd",
+        password: "1234Password1234",
+      });
+      await expect(user.save()).rejects.toThrow(
+        "User validation failed: email"
+      );
+    });
+
+    // We should test that duplicate emails aren't added
+    // but mongoose indices make this difficult and these have
+    // been omitted for time
+
+    it("cannot be saved when given an empty password", async () => {
+      const user = new User({ email: "test@test.com" });
+      await expect(user.save()).rejects.toThrow(
+        "User validation failed: password"
+      );
+    });
+
+    it("cannot be saved when password is less that 6 characters long", async () => {
+      const user1 = new User({ email: "test@test.com", password: "1234" });
+      const user2 = new User({ email: "test@test.com", password: "12345" });
+      const user3 = new User({ email: "test@test.com", password: "123456" });
+
+      await Promise.all([
+        expect(user1.save()).rejects.toThrow(),
+        expect(user2.save()).rejects.toThrow(),
+        expect(user3.save()).resolves,
+      ]);
+    });
+  });
 });
