@@ -2,7 +2,7 @@ const http = require("http");
 const mongoose = require("mongoose");
 const app = require("./app");
 
-const mongoURL = process.env.mongoURL || "mongodb://127.0.0.1:27017/chatApp";
+const mongoURL = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/chatApp";
 mongoose.connect(mongoURL);
 
 const db = mongoose.connection;
