@@ -2,6 +2,7 @@ const app = require("../../app");
 const request = require("supertest");
 const testHelpers = require("../testHelpers");
 const User = require("../../models/user");
+const jwt = require("jsonwebtoken");
 
 describe("Login routes", () => {
   beforeAll(async () => {
@@ -19,11 +20,12 @@ describe("Login routes", () => {
   });
 
   describe("when the correct credentials are provided", () => {
-    let response;
+    let response, tokenPayload;
     beforeAll(async () => {
       response = await request(app)
         .post("/login")
         .send({ email: "test@test.com", password: "1234Password1234" });
+      tokenPayload = jwt.verify(response.body.token, process.env.JWT_SECRET);
     });
 
     it("responds with 200 status code", () => {
@@ -32,6 +34,18 @@ describe("Login routes", () => {
 
     it("responds with a message", () => {
       expect(response.body.message).toEqual("success");
+    });
+
+    it("responds with a valid token", () => {
+      expect(tokenPayload).toMatchObject({ iat: expect.any(Number) });
+    });
+
+    it("responds with a token containing the user's id", () => {
+      expect(tokenPayload).toMatchObject({ userId: expect.any(String) });
+    });
+
+    it("responds with a token containing the user's username", () => {
+      expect(tokenPayload).toMatchObject({ username: "fakeUsername" });
     });
   });
 });

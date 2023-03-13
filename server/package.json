@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "JWT_SECRET=helloworld jest",
     "dev": "nodemon ./index.js",
     "start": "node ./index.js"
   },
