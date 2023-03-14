@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 
 const TokenController = {
   generate: async (req, res) => {
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).json({ message: "Bad request" });
+    }
+
     const user = await User.findOne({ email: req.body.email });
     if (!user || user.password !== req.body.password) {
       return res.status(401).json({ message: "Invalid details" });

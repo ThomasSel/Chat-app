@@ -19,6 +19,24 @@ describe("Login routes", () => {
     await testHelpers.disconnect();
   });
 
+  describe("when a field is missing", () => {
+    it("responds with 400 status code if email is missing", async () => {
+      const response = await request(app)
+        .post("/login")
+        .send({ password: "1234Password1234" });
+      expect(response.statusCode).toEqual(400);
+      expect(response.body).toEqual({ message: "Bad request" });
+    });
+
+    it("responds with 400 status code if password is missing", async () => {
+      const response = await request(app)
+        .post("/login")
+        .send({ email: "test@test.com" });
+      expect(response.statusCode).toEqual(400);
+      expect(response.body).toEqual({ message: "Bad request" });
+    });
+  });
+
   describe("when the correct credentials are provided", () => {
     let response, tokenPayload;
     beforeAll(async () => {
@@ -38,6 +56,9 @@ describe("Login routes", () => {
 
     it("responds with a valid token", () => {
       expect(tokenPayload).toMatchObject({ iat: expect.any(Number) });
+      expect(() => jwt.verify(response.body.token, "wrong token")).toThrow(
+        "invalid signature"
+      );
     });
 
     it("responds with a token containing the user's id", () => {
