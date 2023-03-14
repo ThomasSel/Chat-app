@@ -48,4 +48,38 @@ describe("Login routes", () => {
       expect(tokenPayload).toMatchObject({ username: "fakeUsername" });
     });
   });
+
+  describe("when incorrect email is provided", () => {
+    let response;
+    beforeAll(async () => {
+      response = await request(app)
+        .post("/login")
+        .send({ email: "wrong@email.com", password: "1234Password1234" });
+    });
+
+    it("responds with 401 status", async () => {
+      expect(response.statusCode).toEqual(401);
+    });
+
+    it("responds with unauthorized message", async () => {
+      expect(response.body).toEqual({ message: "Invalid details" });
+    });
+  });
+
+  describe("when incorrect password is provided", () => {
+    let response;
+    beforeAll(async () => {
+      response = await request(app)
+        .post("/login")
+        .send({ email: "test@test.com", password: "4321password4321" });
+    });
+
+    it("responds with 401 status", async () => {
+      expect(response.statusCode).toEqual(401);
+    });
+
+    it("responds with unauthorized message", async () => {
+      expect(response.body).toEqual({ message: "Invalid details" });
+    });
+  });
 });
