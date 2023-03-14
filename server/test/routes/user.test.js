@@ -15,7 +15,7 @@ describe("User routes", () => {
   describe("when a valid user is provided", () => {
     let response, newUser;
     beforeAll(async () => {
-      await testHelpers.deleteCollection("users");
+      await User.deleteMany({});
       response = await request(app).post("/users").send({
         email: "test@test.com",
         username: "fakeUsername",
@@ -48,7 +48,7 @@ describe("User routes", () => {
   describe("when an invalid user is provided", () => {
     let response;
     beforeAll(async () => {
-      await testHelpers.deleteCollection("users");
+      await User.deleteMany({});
       response = await request(app).post("/users").send({
         email: "",
         username: "",

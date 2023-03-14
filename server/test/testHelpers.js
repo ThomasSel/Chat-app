@@ -11,14 +11,13 @@ module.exports = {
       }),
   disconnect: async () => {
     try {
-      await mongoose.connection.db.dropDatabase().catch(console.error);
+      await mongoose.connection.db.dropDatabase();
       await mongoose.disconnect();
     } catch (err) {
       throw new Error("Couldn't drop the test database");
     }
   },
-  deleteCollection: (collection) =>
-    mongoose.connection.collections[collection].drop().catch((error) => {
-      if (error.message !== "ns not found") new Error(error.message);
-    }),
+  deleteCollection: async (model) => {
+    await model.deleteMany({});
+  },
 };

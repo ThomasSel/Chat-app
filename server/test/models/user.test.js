@@ -7,11 +7,12 @@ describe(User, () => {
   });
 
   afterAll(async () => {
+    await User.deleteMany({});
     await testHelpers.disconnect();
   });
 
   beforeEach(async () => {
-    await testHelpers.deleteCollection("users");
+    await User.deleteMany({});
   });
 
   describe("with a valid user", () => {
