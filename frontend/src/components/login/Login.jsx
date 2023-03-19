@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -13,7 +15,16 @@ const Login = (props) => {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        window.localStorage.setItem("token", data.token);
+        navigate("/chats");
+      });
   };
 
   return (
