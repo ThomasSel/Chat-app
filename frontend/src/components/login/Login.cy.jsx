@@ -26,4 +26,30 @@ describe("Login", () => {
       expect(interception.request.body.password).to.equal("1234Password1234");
     });
   });
+
+  describe("form validation", () => {
+    describe("email", () => {
+      it("fails if empty", () => {
+        cy.mount(<Login />);
+
+        cy.get('[data-cy="login-password"]').type("1234Password1234");
+
+        cy.get('[data-cy="login-email"]')
+          .then(($el) => $el[0].checkValidity())
+          .should("be.false");
+      });
+    });
+
+    describe("password", () => {
+      it("fails if empty", () => {
+        cy.mount(<Login />);
+
+        cy.get('[data-cy="login-email"]').type("test@test.com");
+
+        cy.get('[data-cy="login-password"]')
+          .then(($el) => $el[0].checkValidity())
+          .should("be.false");
+      });
+    });
+  });
 });

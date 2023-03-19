@@ -26,6 +26,8 @@ const Login = (props) => {
             name="email"
             id="email"
             data-cy="login-email"
+            required
+            match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
             value={formData.email}
             onChange={handleChange("email")}
           />
@@ -38,6 +40,8 @@ const Login = (props) => {
             name="password"
             id="password"
             data-cy="login-password"
+            required
+            minLength={6}
             value={formData.password}
             onChange={handleChange("password")}
           />
