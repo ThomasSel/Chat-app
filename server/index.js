@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const http = require("http");
 const mongoose = require("mongoose");
 const app = require("./app");
