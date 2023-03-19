@@ -30,6 +30,8 @@ const Signup = () => {
             name="username"
             id="username"
             data-cy="signup-username"
+            required
+            minLength={4}
             value={formData.username}
             onChange={handleChange("username")}
           />
@@ -41,6 +43,8 @@ const Signup = () => {
             name="email"
             id="email"
             data-cy="signup-email"
+            required
+            match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
             value={formData.email}
             onChange={handleChange("email")}
           />
@@ -52,6 +56,8 @@ const Signup = () => {
             name="password"
             id="password"
             data-cy="signup-password"
+            required
+            minLength={6}
             value={formData.password}
             onChange={handleChange("password")}
           />

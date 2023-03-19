@@ -29,4 +29,45 @@ describe("Signup", () => {
       expect(interception.request.body.password).to.equal("1234Password1234");
     });
   });
+
+  describe("form validation", () => {
+    describe("username", () => {
+      it("fails if empty", () => {
+        cy.mount(<Signup />);
+
+        cy.get('[data-cy="signup-email"]').type("test@test.com");
+        cy.get('[data-cy="signup-password"]').type("1234Password1234");
+
+        cy.get('[data-cy="signup-username"]')
+          .then(($el) => $el[0].checkValidity())
+          .should("be.false");
+      });
+    });
+
+    describe("email", () => {
+      it("fails if empty", () => {
+        cy.mount(<Signup />);
+
+        cy.get('[data-cy="signup-username"]').type("fakeUsername");
+        cy.get('[data-cy="signup-password"]').type("1234Password1234");
+
+        cy.get('[data-cy="signup-email"]')
+          .then(($el) => $el[0].checkValidity())
+          .should("be.false");
+      });
+    });
+
+    describe("password", () => {
+      it("fails if empty", () => {
+        cy.mount(<Signup />);
+
+        cy.get('[data-cy="signup-username"]').type("fakeUsername");
+        cy.get('[data-cy="signup-email"]').type("test@test.com");
+
+        cy.get('[data-cy="signup-password"]')
+          .then(($el) => $el[0].checkValidity())
+          .should("be.false");
+      });
+    });
+  });
 });
