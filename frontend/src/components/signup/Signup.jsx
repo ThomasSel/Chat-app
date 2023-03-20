@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,7 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -17,7 +19,14 @@ const Signup = () => {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-    });
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Invalid details");
+        }
+        navigate("/login");
+      })
+      .catch(console.error);
   };
 
   return (
