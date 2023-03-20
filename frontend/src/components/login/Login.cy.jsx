@@ -1,8 +1,10 @@
 import Login from "./Login";
 
+const navigate = () => {};
+
 describe("Login", () => {
   it("has visible email and password fields, and a submit button", () => {
-    cy.mount(<Login />);
+    cy.mount(<Login navigate={navigate} />);
 
     cy.get('[data-cy="login-email"]').should("be.visible");
     cy.get('[data-cy="login-password"]').should("be.visible");
@@ -15,7 +17,7 @@ describe("Login", () => {
       body: { message: "success", token: "fakeToken" },
     }).as("loginRequest");
 
-    cy.mount(<Login />);
+    cy.mount(<Login navigate={navigate} />);
 
     cy.get('[data-cy="login-email"]').type("test@test.com");
     cy.get('[data-cy="login-password"]').type("1234Password1234");
@@ -30,7 +32,7 @@ describe("Login", () => {
   describe("form validation", () => {
     describe("email", () => {
       it("fails if empty", () => {
-        cy.mount(<Login />);
+        cy.mount(<Login navigate={navigate} />);
 
         cy.get('[data-cy="login-password"]').type("1234Password1234");
 
@@ -42,7 +44,7 @@ describe("Login", () => {
 
     describe("password", () => {
       it("fails if empty", () => {
-        cy.mount(<Login />);
+        cy.mount(<Login navigate={navigate} />);
 
         cy.get('[data-cy="login-email"]').type("test@test.com");
 

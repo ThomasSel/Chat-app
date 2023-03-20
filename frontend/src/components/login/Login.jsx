@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -23,7 +21,7 @@ const Login = (props) => {
       })
       .then((data) => {
         window.localStorage.setItem("token", data.token);
-        navigate("/chats");
+        props.navigate("/chats");
       });
   };
 

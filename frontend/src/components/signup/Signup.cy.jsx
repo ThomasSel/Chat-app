@@ -1,8 +1,10 @@
 import Signup from "./Signup";
 
+const navigate = () => {};
+
 describe("Signup", () => {
   it("has visible username, email and password input fields", () => {
-    cy.mount(<Signup />);
+    cy.mount(<Signup navigate={navigate} />);
 
     cy.get('[data-cy="signup-username"]').should("be.visible");
     cy.get('[data-cy="signup-email"]').should("be.visible");
@@ -16,7 +18,7 @@ describe("Signup", () => {
       body: { message: "User created" },
     }).as("signupRequest");
 
-    cy.mount(<Signup />);
+    cy.mount(<Signup navigate={navigate} />);
 
     cy.get('[data-cy="signup-username"]').type("fakeUsername");
     cy.get('[data-cy="signup-email"]').type("test@test.com");
@@ -33,7 +35,7 @@ describe("Signup", () => {
   describe("form validation", () => {
     describe("username", () => {
       it("fails if empty", () => {
-        cy.mount(<Signup />);
+        cy.mount(<Signup navigate={navigate} />);
 
         cy.get('[data-cy="signup-email"]').type("test@test.com");
         cy.get('[data-cy="signup-password"]').type("1234Password1234");
@@ -46,7 +48,7 @@ describe("Signup", () => {
 
     describe("email", () => {
       it("fails if empty", () => {
-        cy.mount(<Signup />);
+        cy.mount(<Signup navigate={navigate} />);
 
         cy.get('[data-cy="signup-username"]').type("fakeUsername");
         cy.get('[data-cy="signup-password"]').type("1234Password1234");
@@ -59,7 +61,7 @@ describe("Signup", () => {
 
     describe("password", () => {
       it("fails if empty", () => {
-        cy.mount(<Signup />);
+        cy.mount(<Signup navigate={navigate} />);
 
         cy.get('[data-cy="signup-username"]').type("fakeUsername");
         cy.get('[data-cy="signup-email"]').type("test@test.com");

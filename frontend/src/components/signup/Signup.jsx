@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Signup = (props) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -24,7 +22,7 @@ const Signup = () => {
         if (!response.ok) {
           throw new Error("Invalid details");
         }
-        navigate("/login");
+        props.navigate("/login");
       })
       .catch(console.error);
   };
