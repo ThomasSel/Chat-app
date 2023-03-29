@@ -38,7 +38,7 @@ describe("Signup", () => {
       body: { message: "User created" },
     }).as("signupRequest");
 
-    const navigateStub = cy.stub();
+    const navigateStub = cy.stub().as("navigateStub");
 
     cy.mount(<Signup navigate={navigateStub} />);
 
@@ -48,7 +48,7 @@ describe("Signup", () => {
     cy.get('[data-cy="signup-submit"]').click();
 
     cy.wait("@signupRequest").then((interception) => {
-      expect(navigateStub).to.have.been.calledOnceWith("/login");
+      cy.get("@navigateStub").should("be.calledOnceWith", "/login");
     });
   });
 

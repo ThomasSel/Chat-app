@@ -35,7 +35,7 @@ describe("Login", () => {
       body: { message: "success", token: "fakeToken" },
     }).as("loginRequest");
 
-    const navigateStub = cy.stub();
+    const navigateStub = cy.stub().as("navigateStub");
 
     cy.mount(<Login navigate={navigateStub} />);
 
@@ -44,7 +44,7 @@ describe("Login", () => {
     cy.get('[data-cy="login-submit"]').click();
 
     cy.wait("@loginRequest").then((interception) => {
-      expect(navigateStub).to.have.been.calledOnceWith("/chats");
+      cy.get("@navigateStub").should("be.calledOnceWith", "/chats");
     });
   });
 
@@ -54,7 +54,7 @@ describe("Login", () => {
       body: { message: "Invalid details" },
     }).as("loginRequest");
 
-    const navigateStub = cy.stub();
+    const navigateStub = cy.stub().as("navigateStub");
 
     cy.mount(<Login navigate={navigateStub} />);
 
@@ -63,7 +63,7 @@ describe("Login", () => {
     cy.get('[data-cy="login-submit"]').click();
 
     cy.wait("@loginRequest").then((interception) => {
-      expect(navigateStub).not.to.be.called;
+      cy.get("@navigateStub").should("not.be.called");
     });
   });
 
