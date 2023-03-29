@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Signup.css";
 
 const Signup = (props) => {
   const [formData, setFormData] = useState({
@@ -29,48 +30,51 @@ const Signup = (props) => {
 
   return (
     <main>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            data-cy="signup-username"
-            required
-            minLength={4}
-            value={formData.username}
-            onChange={handleChange("username")}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            data-cy="signup-email"
-            required
-            match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
-            value={formData.email}
-            onChange={handleChange("email")}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            data-cy="signup-password"
-            required
-            minLength={6}
-            value={formData.password}
-            onChange={handleChange("password")}
-          />
-        </div>
-        <input type="submit" value="Submit" data-cy="signup-submit" />
-      </form>
+      <div className="form-wrapper">
+        <h1>Sign up</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-element">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              data-cy="signup-username"
+              required
+              minLength={4}
+              value={formData.username}
+              onChange={handleChange("username")}
+            />
+          </div>
+          <div className="form-element">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              data-cy="signup-email"
+              required
+              match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              value={formData.email}
+              onChange={handleChange("email")}
+            />
+          </div>
+          <div className="form-element">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              data-cy="signup-password"
+              required
+              minLength={6}
+              value={formData.password}
+              onChange={handleChange("password")}
+            />
+          </div>
+          <input type="submit" value="Submit" data-cy="signup-submit" />
+        </form>
+      </div>
     </main>
   );
 };

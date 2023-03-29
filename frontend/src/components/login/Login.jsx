@@ -29,37 +29,38 @@ const Login = (props) => {
 
   return (
     <main>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            data-cy="login-email"
-            required
-            match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
-            value={formData.email}
-            onChange={handleChange("email")}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            data-cy="login-password"
-            required
-            minLength={6}
-            value={formData.password}
-            onChange={handleChange("password")}
-          />
-        </div>
-
-        <input type="submit" value="Submit" data-cy="login-submit" />
-      </form>
+      <div className="form-wrapper">
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-element">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              data-cy="login-email"
+              required
+              match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              value={formData.email}
+              onChange={handleChange("email")}
+            />
+          </div>
+          <div className="form-element">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              data-cy="login-password"
+              required
+              minLength={6}
+              value={formData.password}
+              onChange={handleChange("password")}
+            />
+          </div>
+          <input type="submit" value="Submit" data-cy="login-submit" />
+        </form>
+      </div>
     </main>
   );
 };

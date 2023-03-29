@@ -2,6 +2,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Signup from "./components/signup/Signup";
 import Login from "./components/login/Login";
 import Home from "./components/home/Home";
+import "./App.css";
 
 function App() {
   const navigate = useNavigate();
