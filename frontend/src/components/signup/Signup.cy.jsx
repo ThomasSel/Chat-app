@@ -32,6 +32,26 @@ describe("Signup", () => {
     });
   });
 
+  it("redirects to /login after a valid request/response", () => {
+    cy.intercept("Post", "/api/users", {
+      statusCode: 201,
+      body: { message: "User created" },
+    }).as("signupRequest");
+
+    const navigateStub = cy.stub();
+
+    cy.mount(<Signup navigate={navigateStub} />);
+
+    cy.get('[data-cy="signup-username"]').type("fakeUsername");
+    cy.get('[data-cy="signup-email"]').type("test@test.com");
+    cy.get('[data-cy="signup-password"]').type("1234Password1234");
+    cy.get('[data-cy="signup-submit"]').click();
+
+    cy.wait("@signupRequest").then((interception) => {
+      expect(navigateStub).to.have.been.calledOnceWith("/login");
+    });
+  });
+
   describe("form validation", () => {
     describe("username", () => {
       it("fails if empty", () => {
