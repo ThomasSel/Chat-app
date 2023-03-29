@@ -29,6 +29,44 @@ describe("Login", () => {
     });
   });
 
+  it("redirects to /chats after a valid request/response", () => {
+    cy.intercept("post", "/api/login", {
+      statusCode: 200,
+      body: { message: "success", token: "fakeToken" },
+    }).as("loginRequest");
+
+    const navigateStub = cy.stub();
+
+    cy.mount(<Login navigate={navigateStub} />);
+
+    cy.get('[data-cy="login-email"]').type("test@test.com");
+    cy.get('[data-cy="login-password"]').type("1234Password1234");
+    cy.get('[data-cy="login-submit"]').click();
+
+    cy.wait("@loginRequest").then((interception) => {
+      expect(navigateStub).to.have.been.calledOnceWith("/chats");
+    });
+  });
+
+  it("doesn't redirect if the response isn't valid", () => {
+    cy.intercept("post", "/api/login", {
+      statusCode: 401,
+      body: { message: "Invalid details" },
+    }).as("loginRequest");
+
+    const navigateStub = cy.stub();
+
+    cy.mount(<Login navigate={navigateStub} />);
+
+    cy.get('[data-cy="login-email"]').type("test@test.com");
+    cy.get('[data-cy="login-password"]').type("wrongPassword");
+    cy.get('[data-cy="login-submit"]').click();
+
+    cy.wait("@loginRequest").then((interception) => {
+      expect(navigateStub).not.to.be.called;
+    });
+  });
+
   describe("form validation", () => {
     describe("email", () => {
       it("fails if empty", () => {

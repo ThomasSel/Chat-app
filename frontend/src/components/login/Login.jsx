@@ -20,8 +20,10 @@ const Login = (props) => {
         }
       })
       .then((data) => {
-        window.localStorage.setItem("token", data.token);
-        props.navigate("/chats");
+        if (data) {
+          window.localStorage.setItem("token", data.token);
+          props.navigate("/chats");
+        }
       });
   };
 
