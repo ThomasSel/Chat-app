@@ -17,11 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        working-directory: ./server
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: server/package-lock.json
       - name: Setup, Run Tests
         working-directory: ./server
         run: |
@@ -38,11 +38,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        working-directory: ./frontend
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: |
+            server/package-lock.json
+            frontend/package-lock.json
       - name: Setup, Build and Run Component Test
         working-directory: ./frontend
         run: |
