@@ -14,7 +14,6 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import { VERIFY_TEST_RUNNER_TIMEOUT_MS } from "cypress/lib/tasks/verify";
 import "./commands";
 
 // Alternatively you can use CommonJS syntax:
