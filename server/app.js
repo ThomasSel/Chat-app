@@ -12,5 +12,8 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/login", tokenRouter);
+app.get("/status", (req, res) => {
+  res.status(200).json({ status: "online" });
+});
 
 module.exports = app;

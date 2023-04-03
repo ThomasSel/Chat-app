@@ -8,6 +8,7 @@
     "test": "cypress run && cypress run --component",
     "test:unit": "cypress run --component",
     "test:feature": "cypress run",
+    "test:server": "node testServer.js",
     "build": "vite build",
     "preview": "vite preview"
   },
