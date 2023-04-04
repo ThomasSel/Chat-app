@@ -62,12 +62,13 @@ jobs:
         run: |
           npm ci
           npm run dev &
-      - name: Check the server is up and running
-        working-directory: ./frontend
-        run: npm run test:server
+      # - name: Check the server is up and running
+      #   working-directory: ./frontend
+      #   run: npm run test:server
       - name: Setup, and Run e2e Tests
         working-directory: ./frontend
         run: |
+          npm run test:server
           npm run dev &
           npm run test:feature
 
