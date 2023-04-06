@@ -34,6 +34,28 @@ jobs:
         ports:
           - 27017:27017
 
+  frontend_component_tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Setup, Build and Run Unit Tests
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build --if-present
+          npm run test:unit
+
   frontend_build_and_tests:
     runs-on: ubuntu-latest
 
@@ -51,23 +73,15 @@ jobs:
           cache-dependency-path: |
             server/package-lock.json
             frontend/package-lock.json
-      - name: Setup, Build and Run Unit Tests
-        working-directory: ./frontend
-        run: |
-          npm ci
-          # npm run build --if-present
-          # npm run test:unit
       - name: Setup, and Run Server
         working-directory: ./server
         run: |
           npm ci
           npm run dev &
-      # - name: Check the server is up and running
-      #   working-directory: ./frontend
-      #   run: npm run test:server
       - name: Setup, and Run e2e Tests
         working-directory: ./frontend
         run: |
+          npm ci
           npm run test:server
           npm run dev &
           npm run test:feature
