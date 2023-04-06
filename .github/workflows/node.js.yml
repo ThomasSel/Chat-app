@@ -84,6 +84,7 @@ jobs:
           npm ci
           # npm run test:server
           npm run dev &
+          lsof -i -P -n | grep LISTEN
           npm run test:feature
 
     services:
