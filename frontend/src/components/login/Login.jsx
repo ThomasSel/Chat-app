@@ -24,7 +24,8 @@ const Login = (props) => {
           window.localStorage.setItem("token", data.token);
           props.navigate("/chats");
         }
-      });
+      })
+      .catch(console.error);
   };
 
   return (

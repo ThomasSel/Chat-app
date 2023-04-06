@@ -12,7 +12,7 @@ describe("Login", () => {
   });
 
   it("sends a validly formatted request when submitting the form", () => {
-    cy.intercept("post", "/api/login", {
+    cy.intercept("post", "http://localhost:8000/login", {
       statusCode: 200,
       body: { message: "success", token: "fakeToken" },
     }).as("loginRequest");
@@ -30,7 +30,7 @@ describe("Login", () => {
   });
 
   it("redirects to /chats after a valid request/response", () => {
-    cy.intercept("post", "/api/login", {
+    cy.intercept("post", "http://localhost:8000/login", {
       statusCode: 200,
       body: { message: "success", token: "fakeToken" },
     }).as("loginRequest");
@@ -49,7 +49,7 @@ describe("Login", () => {
   });
 
   it("doesn't redirect if the response isn't valid", () => {
-    cy.intercept("post", "/api/login", {
+    cy.intercept("post", "http://localhost:8000/login", {
       statusCode: 401,
       body: { message: "Invalid details" },
     }).as("loginRequest");
