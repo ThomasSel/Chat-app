@@ -13,9 +13,12 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const port = parseInt(process.env.PORT || "8000");
 const httpServer = http.createServer(app);
 
-process.on("uncaughtException", (error) =>
-  console.error(`SERVER ERROR - ${error}`)
-);
+if (process.env.CATCH_EXCEPTIONS) {
+  console.log("WARNING: IGNORING UNCAUGHT EXCEPTIONS");
+  process.on("uncaughtException", (error) =>
+    console.error(`SERVER ERROR - ${error}`)
+  );
+}
 
 httpServer.listen(port, () => {
   console.log(`Listening to port ${port}`);
