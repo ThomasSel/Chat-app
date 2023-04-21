@@ -78,14 +78,21 @@ jobs:
         run: |
           npm ci
           npm run dev &
+      - name: Server Diagonostics
+        if: always()
+        working-directory: ./frontend
+        run: npm run test:server
       - name: Setup, and Run e2e Tests
         working-directory: ./frontend
         run: |
           npm ci
-          # npm run test:server
           npm run dev &
           lsof -i -P -n | grep LISTEN
           npm run test:feature
+      - name: Server Diagonostics
+        if: always()
+        working-directory: ./frontend
+        run: npm run test:server
 
     services:
       mongodb:
