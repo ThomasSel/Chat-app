@@ -9,7 +9,8 @@ const Login = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/login", {
+    ("http://localhost:8000/login",
+    {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
