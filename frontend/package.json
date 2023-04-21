@@ -8,12 +8,14 @@
     "test": "cypress run && cypress run --component",
     "test:unit": "cypress run --component",
     "test:feature": "cypress run",
+    "test:server": "node testServer.js",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.9.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

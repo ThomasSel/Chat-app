@@ -14,7 +14,16 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+Cypress.Commands.add("signup", (username, email, password) => {
+  cy.visit("/signup");
+
+  cy.get('[data-cy="signup-username"]').type(username);
+  cy.get('[data-cy="signup-email"]').type(email);
+  cy.get('[data-cy="signup-password"]').type(password);
+  cy.get('[data-cy="signup-submit"]').click();
+});
