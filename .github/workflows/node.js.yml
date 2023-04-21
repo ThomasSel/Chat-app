@@ -34,7 +34,7 @@ jobs:
         ports:
           - 27017:27017
 
-  frontend_component_tests:
+  frontend_build_and_component_tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -56,7 +56,7 @@ jobs:
           npm run build --if-present
           npm run test:unit
 
-  frontend_build_and_tests:
+  frontend_e2e_tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -80,25 +80,12 @@ jobs:
         run: |
           npm ci
           npm run dev &
-      - name: Server Diagonostics
-        if: always()
-        working-directory: ./frontend
-        run: npm run test:server
       - name: Setup, and Run e2e Tests
         working-directory: ./frontend
         run: |
           npm ci
           npm run dev &
-          lsof -i -P -n | grep LISTEN
           npm run test:feature
-      - name: Server Diagonostics
-        if: always()
-        working-directory: ./frontend
-        run: npm run test:server
-      - name: Get Server Error
-        if: always()
-        working-directory: ./server
-        run: cat server-error.log || echo NO ERRORS LOGGED
 
     services:
       mongodb:
