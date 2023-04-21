@@ -48,4 +48,13 @@ describe("Login", () => {
       cy.url().should("not.include", "/chats");
     });
   });
+
+  describe("temp changes", () => {
+    it("checking status of the server from cypress e2e tests", async () => {
+      await fetch("http://localhost:8000/status").then((response) => {
+        console.log(response.status);
+        expect(response.ok).to.equal(true);
+      });
+    });
+  });
 });
