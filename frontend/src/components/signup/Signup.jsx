@@ -13,7 +13,7 @@ const Signup = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/users", {
+    fetch("http://127.0.0.1:8000/users", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
