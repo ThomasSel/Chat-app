@@ -93,6 +93,10 @@ jobs:
         if: always()
         working-directory: ./frontend
         run: npm run test:server
+      - name: Get Server Error
+        if: always()
+        working-directory: ./server
+        run: cat server-error.log || echo NO ERRORS LOGGED
 
     services:
       mongodb:
