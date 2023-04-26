@@ -6,7 +6,9 @@ wsServer.on("connection", (socket) => {
   socket.on("error", console.error);
   socket.on("close", () => {});
   socket.on("message", (data) => {
-    socket.send(data.toString());
+    wsServer.clients.forEach((client) => {
+      client.send(data);
+    });
   });
 });
 
