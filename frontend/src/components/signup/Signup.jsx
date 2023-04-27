@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = (props) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -22,7 +24,7 @@ const Signup = (props) => {
         if (!response.ok) {
           throw new Error("Invalid details");
         }
-        props.navigate("/login");
+        navigate("/login");
       })
       .catch(console.error);
   };

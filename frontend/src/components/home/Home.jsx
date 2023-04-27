@@ -1,17 +1,17 @@
 import { useEffect } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Home = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!window.localStorage.getItem("token")) {
+    if (!window.sessionStorage.getItem("token")) {
       navigate("/login");
     }
   }, []);
 
   const handleLogout = () => {
-    window.localStorage.removeItem("token");
+    window.sessionStorage.removeItem("token");
     navigate("/login");
   };
 

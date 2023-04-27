@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (field) => (e) => {
@@ -21,8 +23,8 @@ const Login = (props) => {
       })
       .then((data) => {
         if (data) {
-          window.localStorage.setItem("token", data.token);
-          props.navigate("/chats");
+          window.sessionStorage.setItem("token", data.token);
+          navigate("/chats");
         }
       })
       .catch(console.error);
