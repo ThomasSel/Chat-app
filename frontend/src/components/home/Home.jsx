@@ -1,18 +1,15 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Home = (props) => {
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (!window.sessionStorage.getItem("token")) {
-      navigate("/login");
+      props.navigate("/login");
     }
   }, []);
 
   const handleLogout = () => {
     window.sessionStorage.removeItem("token");
-    navigate("/login");
+    props.navigate("/login");
   };
 
   return (
