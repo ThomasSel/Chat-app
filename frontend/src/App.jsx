@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Signup from "./components/signup/Signup";
 import Login from "./components/login/Login";
 import Home from "./components/home/Home";
@@ -8,6 +8,7 @@ function App() {
   const navigate = useNavigate();
   return (
     <Routes>
+      <Route index element={<Navigate to={"/chats"} />} />
       <Route path="/signup" element={<Signup navigate={navigate} />} />
       <Route path="/login" element={<Login navigate={navigate} />} />
       <Route path="/chats" element={<Home navigate={navigate} />} />
