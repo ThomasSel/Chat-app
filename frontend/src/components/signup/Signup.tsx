@@ -53,7 +53,7 @@ const Signup = (props) => {
               id="email"
               data-cy="signup-email"
               required
-              match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
               value={formData.email}
               onChange={handleChange("email")}
             />
