@@ -1,10 +1,15 @@
-const Chat = (props) => {
+type ChatProps = {
+  name: string;
+  messages: string[];
+};
+
+const Chat = ({ name, messages }: ChatProps): JSX.Element => {
   return (
     <div>
-      <h1>{props.name}</h1>
+      <h1>{name}</h1>
       <div>
         <ul>
-          {props.messages.map((message) => (
+          {messages.map((message) => (
             <li>{message}</li>
           ))}
         </ul>

@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
+import { NavigateFunction } from "react-router-dom";
 import Chat from "../chat/Chat";
 
-const Home = (props) => {
+type HomeProps = {
+  navigate: NavigateFunction;
+};
+
+const Home = ({ navigate }: HomeProps): JSX.Element => {
   const [token, setToken] = useState(window.sessionStorage.getItem("token"));
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     if (null === token) {
-      return props.navigate("/login");
+      return navigate("/login");
     }
 
     const newSocket = new WebSocket("ws://localhost:8000");
@@ -26,7 +31,7 @@ const Home = (props) => {
   const handleLogout = () => {
     window.sessionStorage.removeItem("token");
     setToken(null);
-    props.navigate("/login");
+    navigate("/login");
   };
 
   return (

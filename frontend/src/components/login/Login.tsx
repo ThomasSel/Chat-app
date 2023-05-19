@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { NavigateFunction } from "react-router-dom";
 
-const Login = (props) => {
+type LoginProps = {
+  navigate: NavigateFunction;
+};
+
+const Login = ({ navigate }: LoginProps): JSX.Element => {
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (field) => (e) => {
@@ -22,7 +27,7 @@ const Login = (props) => {
       .then((data) => {
         if (data) {
           window.sessionStorage.setItem("token", data.token);
-          props.navigate("/chats");
+          navigate("/chats");
         }
       })
       .catch(console.error);
