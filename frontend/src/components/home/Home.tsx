@@ -20,7 +20,8 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
 
     const newSocket = new WebSocket("ws://localhost:8000");
     newSocket.addEventListener("message", async (event) => {
-      const message = await event.data.text();
+      const data: Blob | string = event.data;
+      const message = data instanceof Blob ? await data.text() : data;
       setMessages((prev) => [...prev, message]);
     });
     setSocket(newSocket);
