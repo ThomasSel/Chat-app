@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { NavigateFunction } from "react-router-dom";
 
 type LoginProps = {
@@ -10,17 +10,23 @@ type LoginFormData = {
   password: string;
 };
 
+type LoginFormField = keyof LoginFormData;
+
 const Login = ({ navigate }: LoginProps): JSX.Element => {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
 
-  const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  const handleChange = (
+    field: LoginFormField
+  ): React.ChangeEventHandler<HTMLInputElement> => {
+    return (e) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     fetch("/api/login", {
       method: "post",

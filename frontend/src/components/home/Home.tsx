@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigateFunction } from "react-router-dom";
 import Chat from "../chat/Chat";
 
@@ -30,7 +30,8 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
     };
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
     window.sessionStorage.removeItem("token");
     setToken(null);
     navigate("/login");

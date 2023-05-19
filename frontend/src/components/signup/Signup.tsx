@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { NavigateFunction } from "react-router-dom";
 
 type SignupProps = {
@@ -11,6 +11,8 @@ type SignupFormData = {
   password: string;
 };
 
+type SignupFormField = keyof SignupFormData;
+
 const Signup = ({ navigate }: SignupProps): JSX.Element => {
   const [formData, setFormData] = useState<SignupFormData>({
     username: "",
@@ -18,12 +20,17 @@ const Signup = ({ navigate }: SignupProps): JSX.Element => {
     password: "",
   });
 
-  const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  const handleChange = (
+    field: SignupFormField
+  ): React.ChangeEventHandler<HTMLInputElement> => {
+    return (e) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+
     fetch("/api/users", {
       method: "post",
       headers: { "Content-Type": "application/json" },
