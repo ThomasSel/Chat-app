@@ -5,8 +5,14 @@ type SignupProps = {
   navigate: NavigateFunction;
 };
 
+type SignupFormData = {
+  username: string;
+  email: string;
+  password: string;
+};
+
 const Signup = ({ navigate }: SignupProps): JSX.Element => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignupFormData>({
     username: "",
     email: "",
     password: "",

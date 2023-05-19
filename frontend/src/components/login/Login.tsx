@@ -5,8 +5,16 @@ type LoginProps = {
   navigate: NavigateFunction;
 };
 
+type LoginFormData = {
+  email: string;
+  password: string;
+};
+
 const Login = ({ navigate }: LoginProps): JSX.Element => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));

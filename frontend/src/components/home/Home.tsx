@@ -7,9 +7,11 @@ type HomeProps = {
 };
 
 const Home = ({ navigate }: HomeProps): JSX.Element => {
-  const [token, setToken] = useState(window.sessionStorage.getItem("token"));
-  const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
+  const [token, setToken] = useState<string | null>(
+    window.sessionStorage.getItem("token")
+  );
+  const [messages, setMessages] = useState<string[]>([]);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
     if (null === token) {
