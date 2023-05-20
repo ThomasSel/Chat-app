@@ -60,7 +60,7 @@ const Login = ({ navigate }: LoginProps): JSX.Element => {
               id="email"
               data-cy="login-email"
               required
-              pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
               value={formData.email}
               onChange={handleChange("email")}
             />

@@ -71,7 +71,7 @@ const Signup = ({ navigate }: SignupProps): JSX.Element => {
               id="email"
               data-cy="signup-email"
               required
-              pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
               value={formData.email}
               onChange={handleChange("email")}
             />
