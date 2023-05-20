@@ -13,7 +13,7 @@ describe("Signup", () => {
   });
 
   it("sends a valid request when submitting the form", () => {
-    cy.intercept("Post", "/api/users", {
+    cy.intercept("post", "/api/users", {
       statusCode: 201,
       body: { message: "User created" },
     }).as("signupRequest");
@@ -33,7 +33,7 @@ describe("Signup", () => {
   });
 
   it("redirects to /login after a valid request/response", () => {
-    cy.intercept("Post", "/api/users", {
+    cy.intercept("post", "/api/users", {
       statusCode: 201,
       body: { message: "User created" },
     }).as("signupRequest");
