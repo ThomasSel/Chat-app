@@ -60,7 +60,7 @@ describe("Signup", () => {
         cy.get('[data-cy="signup-email"]').type("test@test.com");
         cy.get('[data-cy="signup-password"]').type("1234Password1234");
 
-        cy.get('[data-cy="signup-username"]')
+        cy.get<HTMLInputElement>('[data-cy="signup-username"]')
           .then(($el) => $el[0].checkValidity())
           .should("be.false");
       });
@@ -73,7 +73,7 @@ describe("Signup", () => {
         cy.get('[data-cy="signup-username"]').type("fakeUsername");
         cy.get('[data-cy="signup-password"]').type("1234Password1234");
 
-        cy.get('[data-cy="signup-email"]')
+        cy.get<HTMLInputElement>('[data-cy="signup-email"]')
           .then(($el) => $el[0].checkValidity())
           .should("be.false");
       });
@@ -86,7 +86,7 @@ describe("Signup", () => {
         cy.get('[data-cy="signup-username"]').type("fakeUsername");
         cy.get('[data-cy="signup-email"]').type("test@test.com");
 
-        cy.get('[data-cy="signup-password"]')
+        cy.get<HTMLInputElement>('[data-cy="signup-password"]')
           .then(($el) => $el[0].checkValidity())
           .should("be.false");
       });
