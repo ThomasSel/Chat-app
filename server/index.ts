@@ -1,9 +1,10 @@
 require("dotenv").config();
 
-const http = require("http");
-const mongoose = require("mongoose");
-const app = require("./app");
-const wsServer = require("./wsServer");
+import http from "http";
+import mongoose from "mongoose";
+
+import wsServer from "./wsServer";
+import app from "./app";
 
 const mongoURL = process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/chatApp";
 mongoose.connect(mongoURL);

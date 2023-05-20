@@ -1,4 +1,5 @@
-const WebSocket = require("ws");
+// const WebSocket = require("ws");
+import WebSocket from "ws";
 
 const wsServer = new WebSocket.WebSocketServer({ noServer: true });
 
@@ -13,4 +14,4 @@ wsServer.on("connection", (socket) => {
   });
 });
 
-module.exports = wsServer;
+export default wsServer;

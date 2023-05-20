@@ -1,6 +1,5 @@
-const express = require("express");
-const cors = require("cors");
-const fs = require("fs/promises");
+import express from "express";
+import cors from "cors";
 
 const userRouter = require("./routes/user");
 const tokenRouter = require("./routes/token");
@@ -16,4 +15,4 @@ app.get("/status", (req, res) => {
   res.status(200).json({ status: "online" });
 });
 
-module.exports = app;
+export default app;
