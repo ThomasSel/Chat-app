@@ -1,4 +1,3 @@
-// const WebSocket = require("ws");
 import WebSocket from "ws";
 
 const wsServer = new WebSocket.WebSocketServer({ noServer: true });

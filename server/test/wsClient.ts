@@ -1,13 +1,16 @@
-const ws = require("ws");
-const { WS_ADDRESS } = require("./wsHelpers");
+import ws from "ws";
+import { WS_ADDRESS } from "./wsHelpers";
 
 class wsClient {
+  socket: ws.WebSocket;
+  messages: string[];
+
   constructor(address = WS_ADDRESS) {
     this.socket = new ws.WebSocket(address);
     this.messages = [];
   }
 
-  async expectMessages(numMessages) {
+  async expectMessages(numMessages: number) {
     await this.waitReady();
 
     this.socket.on("message", (data) => {
@@ -21,18 +24,18 @@ class wsClient {
     await this.waitClosed();
   }
 
-  async send(data) {
+  async send(data: string) {
     await this.waitReady();
     this.socket.send(data);
   }
 
-  close(data) {
+  close() {
     this.socket.close();
     return this.waitClosed();
   }
 
   waitReady() {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const interval = setInterval(() => {
         switch (this.socket.readyState) {
           case 0:
@@ -45,20 +48,20 @@ class wsClient {
             clearInterval(interval);
             reject(new Error("ws connection is closed"));
         }
-      });
-    }, 10);
+      }, 10);
+    });
   }
 
   waitClosed() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const interval = setInterval(() => {
         if (this.socket.readyState === 3) {
           clearInterval(interval);
           resolve();
         }
-      });
-    }, 10);
+      }, 10);
+    });
   }
 }
 
-module.exports = wsClient;
+export default wsClient;

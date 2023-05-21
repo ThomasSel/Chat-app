@@ -1,10 +1,10 @@
-const wsServer = require("../wsServer");
-const http = require("node:http");
+import wsServer from "../wsServer";
+import http from "node:http";
 
-const WS_PORT = process.env.WS_PORT || 8100;
-const WS_ADDRESS = `ws://localhost:${WS_PORT}`;
+export const WS_PORT = parseInt(process.env.WS_PORT ?? "8100");
+export const WS_ADDRESS = `ws://localhost:${WS_PORT}`;
 
-const hostWsServer = () => {
+export const hostWsServer = () => {
   const httpServer = http.createServer();
 
   // Attach the ws server to the http server
@@ -18,5 +18,3 @@ const hostWsServer = () => {
 
   return [wsServer, httpServer];
 };
-
-module.exports = { hostWsServer, WS_ADDRESS, WS_PORT };
