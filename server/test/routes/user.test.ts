@@ -1,19 +1,20 @@
-const app = require("../../app");
-const request = require("supertest");
-const testHelpers = require("../testHelpers");
-const User = require("../../models/user");
+import request from "supertest";
+
+import app from "../../app";
+import { connect, disconnect } from "../testHelpers";
+import User, { IUser, UserModelType } from "../../models/user";
 
 describe("User routes", () => {
   beforeAll(async () => {
-    await testHelpers.connect();
+    await connect();
   });
 
   afterAll(async () => {
-    await testHelpers.disconnect();
+    await disconnect();
   });
 
   describe("when a valid user is provided", () => {
-    let response, newUser;
+    let response: request.Response, newUser: IUser | null;
     beforeAll(async () => {
       await User.deleteMany({});
       response = await request(app).post("/users").send({
@@ -33,20 +34,20 @@ describe("User routes", () => {
     });
 
     it("saves a user with the given email", async () => {
-      expect(newUser.email).toEqual("test@test.com");
+      expect(newUser?.email).toEqual("test@test.com");
     });
 
     it("saves a user with the given username", async () => {
-      expect(newUser.username).toEqual("fakeUsername");
+      expect(newUser?.username).toEqual("fakeUsername");
     });
 
     it("saves a user with the given password", async () => {
-      expect(newUser.password).toEqual("1234Password1234");
+      expect(newUser?.password).toEqual("1234Password1234");
     });
   });
 
   describe("when an invalid user is provided", () => {
-    let response;
+    let response: request.Response;
     beforeAll(async () => {
       await User.deleteMany({});
       response = await request(app).post("/users").send({
