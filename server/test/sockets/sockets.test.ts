@@ -1,8 +1,11 @@
-const { hostWsServer } = require("../wsHelpers");
-const wsClient = require("../wsClient");
+import ws from "ws";
+import http from "http";
+
+import { hostWsServer } from "../wsHelpers";
+import wsClient from "../wsClient";
 
 describe("Socket Server", () => {
-  let wsServer, httpServer;
+  let wsServer: ws.Server, httpServer: http.Server;
   beforeAll(() => {
     [wsServer, httpServer] = hostWsServer();
   });
@@ -71,9 +74,11 @@ describe("Socket Server", () => {
 
       await Promise.all([received1, received2, received3]);
 
-      expect(client1.messages).toContain("client1", "client2", "client3");
-      expect(client2.messages).toContain("client1", "client2", "client3");
-      expect(client2.messages).toContain("client1", "client2", "client3");
+      ["client1", "client2", "client3"].forEach((value) => {
+        expect(client1.messages).toContain(value);
+        expect(client2.messages).toContain(value);
+        expect(client2.messages).toContain(value);
+      });
     });
   });
 });

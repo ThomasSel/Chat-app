@@ -1,10 +1,11 @@
+import ws from "ws";
 import wsServer from "../wsServer";
 import http from "node:http";
 
 export const WS_PORT = parseInt(process.env.WS_PORT ?? "8100");
 export const WS_ADDRESS = `ws://localhost:${WS_PORT}`;
 
-export const hostWsServer = () => {
+export const hostWsServer = (): [ws.Server, http.Server] => {
   const httpServer = http.createServer();
 
   // Attach the ws server to the http server
