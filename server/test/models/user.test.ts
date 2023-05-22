@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User, { UserDocument } from "../../models/user";
 import { connect, disconnect } from "../testHelpers";
 
@@ -38,7 +39,7 @@ describe(User, () => {
     });
 
     it("has an id", () => {
-      expect(user._id).toEqual(expect.any(String));
+      expect(user._id).toEqual(expect.any(mongoose.Types.ObjectId));
     });
 
     it("can be saved with an email and password", async () => {
