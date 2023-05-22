@@ -1,4 +1,13 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
+
+//Check for the correct environment variables
+const expectedEnv = ["JWT_SECRET"];
+expectedEnv.forEach((name) => {
+  if (process.env[name] === undefined) {
+    throw new Error(`The environment variable ${name} isn't set`);
+  }
+});
 
 import http from "http";
 import mongoose from "mongoose";
