@@ -1,12 +1,13 @@
-const app = require("../../app");
-const request = require("supertest");
-const testHelpers = require("../testHelpers");
-const User = require("../../models/user");
-const jwt = require("jsonwebtoken");
+import request from "supertest";
+
+import app from "../../app";
+import { connect, disconnect } from "../testHelpers";
+import User from "../../models/user";
+import jwt from "jsonwebtoken";
 
 describe("Login routes", () => {
   beforeAll(async () => {
-    await testHelpers.connect();
+    await connect();
     const user = new User({
       email: "test@test.com",
       username: "fakeUsername",
@@ -16,7 +17,7 @@ describe("Login routes", () => {
   });
 
   afterAll(async () => {
-    await testHelpers.disconnect();
+    await disconnect();
   });
 
   describe("when a field is missing", () => {
@@ -38,12 +39,14 @@ describe("Login routes", () => {
   });
 
   describe("when the correct credentials are provided", () => {
-    let response, tokenPayload;
+    let response: request.Response, tokenPayload: string | jwt.JwtPayload;
     beforeAll(async () => {
       response = await request(app)
         .post("/login")
         .send({ email: "test@test.com", password: "1234Password1234" });
-      tokenPayload = jwt.verify(response.body.token, process.env.JWT_SECRET);
+
+      const secret = process.env.JWT_SECRET ?? "testSecret";
+      tokenPayload = jwt.verify(response.body.token, secret);
     });
 
     it("responds with 200 status code", () => {
@@ -71,7 +74,7 @@ describe("Login routes", () => {
   });
 
   describe("when incorrect email is provided", () => {
-    let response;
+    let response: request.Response;
     beforeAll(async () => {
       response = await request(app)
         .post("/login")
@@ -88,7 +91,7 @@ describe("Login routes", () => {
   });
 
   describe("when incorrect password is provided", () => {
-    let response;
+    let response: request.Response;
     beforeAll(async () => {
       response = await request(app)
         .post("/login")
