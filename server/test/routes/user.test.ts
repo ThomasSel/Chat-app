@@ -2,7 +2,7 @@ import request from "supertest";
 
 import app from "../../app";
 import { connect, disconnect } from "../testHelpers";
-import User, { IUser, UserModelType } from "../../models/user";
+import User, { IUser, UserDocument, UserModelType } from "../../models/user";
 
 describe("User routes", () => {
   beforeAll(async () => {
@@ -14,7 +14,7 @@ describe("User routes", () => {
   });
 
   describe("when a valid user is provided", () => {
-    let response: request.Response, newUser: IUser | null;
+    let response: request.Response, newUser: UserDocument | null;
     beforeAll(async () => {
       await User.deleteMany({});
       response = await request(app).post("/users").send({

@@ -1,7 +1,8 @@
 // const mongoose = require("mongoose");
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType, Types } from "mongoose";
 
 export interface IUser {
+  _id: Types.ObjectId;
   email: string;
   username: string;
   password: string;
@@ -22,5 +23,12 @@ const UserSchema = new mongoose.Schema<IUser>({
 export type UserModelType = mongoose.Model<IUser>;
 
 const User: UserModelType = mongoose.model<IUser>("User", UserSchema);
+
+const user = new User({
+  email: "test@test.com",
+  username: "fakeUsername",
+  password: "1234Password1234",
+});
+export type UserDocument = typeof user;
 
 export default User;
