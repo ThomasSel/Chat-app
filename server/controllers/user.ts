@@ -1,7 +1,7 @@
 import User from "../models/user";
 import { Request, Response } from "express";
 
-export const create = async (req: Request, res: Response) => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   const email: string = req.body.email;
   const username: string = req.body.username;
   const password: string = req.body.password;
