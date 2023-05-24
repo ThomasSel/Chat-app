@@ -1,12 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 type ChatProps = {
   name: string;
   messages: string[];
+  socket: WebSocket;
 };
 
-const Chat = ({ name, messages }: ChatProps): JSX.Element => {
+const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
   const [message, setMessage] = useState<string>("");
+
+  const handleSubmit: React.FormEventHandler = (e) => {
+    e.preventDefault();
+    socket.send(message);
+    setMessage("");
+  };
 
   return (
     <div>
@@ -14,15 +21,16 @@ const Chat = ({ name, messages }: ChatProps): JSX.Element => {
 
       <ul data-cy="chat-messages">
         {messages.map((message) => (
-          <li>{message}</li>
+          <li key={message}>{message}</li>
         ))}
       </ul>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           data-cy="chat-input"
           onChange={(e) => setMessage(e.target.value)}
+          value={message}
         />
         <input type="submit" value="Send" data-cy="chat-submit" />
       </form>
