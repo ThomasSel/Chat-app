@@ -25,4 +25,11 @@ describe("Chat", () => {
       "<li>message 2</li>"
     );
   });
+
+  it("has an input box and a submit button", () => {
+    cy.mount(<Chat name="Test" messages={[]} />);
+
+    cy.get('[data-cy="chat-input"]').should("be.visible");
+    cy.get('[data-cy="chat-submit"]').should("be.visible");
+  });
 });
