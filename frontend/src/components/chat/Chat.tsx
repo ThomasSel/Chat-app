@@ -26,12 +26,13 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
       <h1 data-cy="chat-name">{name}</h1>
 
       <ul data-cy="chat-messages" className="chat-messages" ref={messagesRef}>
-        {messages.map((message) => (
-          <li key={message} className="chat-message">
+        {messages.map((message, index) => (
+          <li key={index} className="chat-message">
             {message}
           </li>
         ))}
       </ul>
+
       <form onSubmit={handleSubmit} className="message-form">
         <input
           type="text"
