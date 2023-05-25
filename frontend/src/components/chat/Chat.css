@@ -15,6 +15,25 @@
   font-weight: 500;
 }
 
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 250px;
+  list-style-type: none;
+  padding: 0.25rem;
+  margin-block: 0.75rem;
+}
+
+.chat-message {
+  width: fit-content;
+  padding-block: 6px;
+  padding-inline: 10px;
+  border-radius: 16px;
+  background: #e0e0e0;
+  margin-bottom: 4px;
+}
+
 .message-form {
   border-top: 1px solid #bfbfbf;
   display: flex;
@@ -23,7 +42,7 @@
 
 .message-input {
   flex-grow: 1;
-  padding-left: 0.5rem;
+  padding-inline: 0.5rem;
   padding-block: 0.25rem;
   border: none;
   border-right: 1px solid #dfdfdf;
