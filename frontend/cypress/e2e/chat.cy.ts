@@ -34,18 +34,20 @@ describe("chat page", () => {
     cy.get('[data-cy="chat-messages"]').should("contain.text", "message 2");
   });
 
-  it("receives and displays messages from other users", async () => {
+  it("receives and displays messages from other users", () => {
     cy.login("test@test.com", "1234Password1234");
-    cy.visit("/chats");
+    cy.visit("/chats").then(async () => {
+      const [ws1, ws2] = await Promise.all([
+        createWebSocket(),
+        createWebSocket(),
+      ]);
 
-    const ws1 = await createWebSocket();
-    const ws2 = await createWebSocket();
+      ws1.send("message 1");
+      ws2.send("message 2");
 
-    ws1.send("message 1");
-    ws2.send("message 2");
-
-    ws1.close();
-    ws2.close();
+      ws1.close();
+      ws2.close();
+    });
 
     cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
     cy.get('[data-cy="chat-messages"]').should("contain.text", "message 2");
