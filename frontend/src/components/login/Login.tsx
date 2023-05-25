@@ -78,7 +78,12 @@ const Login = ({ navigate }: LoginProps): JSX.Element => {
               onChange={handleChange("password")}
             />
           </div>
-          <input type="submit" value="Submit" data-cy="login-submit" />
+          <input
+            type="submit"
+            value="Submit"
+            data-cy="login-submit"
+            className="form-submit"
+          />
         </form>
       </div>
     </main>

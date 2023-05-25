@@ -89,7 +89,12 @@ const Signup = ({ navigate }: SignupProps): JSX.Element => {
               onChange={handleChange("password")}
             />
           </div>
-          <input type="submit" value="Submit" data-cy="signup-submit" />
+          <input
+            type="submit"
+            value="Submit"
+            data-cy="signup-submit"
+            className="form-submit"
+          />
         </form>
       </div>
     </main>

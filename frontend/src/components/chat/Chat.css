@@ -1,6 +1,10 @@
 .current-chat {
-  max-width: 80%;
+  max-width: 60%;
   margin-inline: auto;
+}
+
+.current-chat * {
+  font-family: "Noto Sans", "sans-serif";
 }
 
 .current-chat h1 {
@@ -9,5 +13,33 @@
   padding-block: 1rem;
   padding-inline: 2rem;
   font-weight: 500;
-  font-family: "Noto Sans", "sans-serif";
+}
+
+.message-form {
+  border-top: 1px solid #bfbfbf;
+  display: flex;
+  flex-direction: row;
+}
+
+.message-input {
+  flex-grow: 1;
+  padding-left: 0.5rem;
+  padding-block: 0.25rem;
+  border: none;
+  border-right: 1px solid #dfdfdf;
+  margin-block: 0.25rem;
+  outline-width: 0px;
+}
+
+.message-send {
+  background: none;
+  padding-inline: 2rem;
+  padding-block: 0.25rem;
+  border: none;
+  font-size: medium;
+}
+
+.message-send:hover {
+  background: #f3f3f3;
+  cursor: pointer;
 }

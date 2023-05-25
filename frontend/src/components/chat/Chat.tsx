@@ -28,14 +28,21 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
             </li>
           ))}
         </ul>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="message-form">
           <input
             type="text"
             data-cy="chat-input"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
+            placeholder={`Send a message to #${name}`}
+            className="message-input"
           />
-          <input type="submit" value="Send" data-cy="chat-submit" />
+          <input
+            type="submit"
+            value="Send"
+            data-cy="chat-submit"
+            className="message-send"
+          />
         </form>
       </div>
     </div>

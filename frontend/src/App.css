@@ -39,7 +39,7 @@ form .form-element input {
   font-size: 1em;
 }
 
-form input[type="submit"] {
+.form-submit {
   width: 8em;
   padding-block: 0.25em;
   border: 1px solid black;
@@ -50,6 +50,6 @@ form input[type="submit"] {
   background-color: rgb(255, 255, 255);
 }
 
-form input[type="submit"]:hover {
+.form-submit:hover {
   background-color: rgba(0, 0, 255, 0.096);
 }
