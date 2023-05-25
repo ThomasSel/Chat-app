@@ -44,7 +44,7 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
         <h1>This page will contain your chats soon...</h1>
         <p>At least your login details work...</p>
       </section>
-      <Chat name="Shared Chat" messages={messages} socket={socket} />
+      <Chat name="General" messages={messages} socket={socket} />
       <button type="button" onClick={handleLogout}>
         Log out
       </button>

@@ -1,0 +1,13 @@
+.current-chat {
+  max-width: 80%;
+  margin-inline: auto;
+}
+
+.current-chat h1 {
+  border-bottom: 1px solid #bfbfbf;
+  margin-block: 0px;
+  padding-block: 1rem;
+  padding-inline: 2rem;
+  font-weight: 500;
+  font-family: "Noto Sans", "sans-serif";
+}

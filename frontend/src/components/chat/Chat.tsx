@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Chat.css";
 
 type ChatProps = {
   name: string;
@@ -16,24 +17,27 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
   };
 
   return (
-    <div>
+    <div className="current-chat">
       <h1 data-cy="chat-name">{name}</h1>
 
-      <ul data-cy="chat-messages">
-        {messages.map((message) => (
-          <li key={message}>{message}</li>
-        ))}
-      </ul>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          data-cy="chat-input"
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-        />
-        <input type="submit" value="Send" data-cy="chat-submit" />
-      </form>
+      <div className="chat-wrapper">
+        <ul data-cy="chat-messages" className="chat-messages">
+          {messages.map((message) => (
+            <li key={message} className="chat-message">
+              {message}
+            </li>
+          ))}
+        </ul>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            data-cy="chat-input"
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+          />
+          <input type="submit" value="Send" data-cy="chat-submit" />
+        </form>
+      </div>
     </div>
   );
 };
