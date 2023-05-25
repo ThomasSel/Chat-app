@@ -1,4 +1,4 @@
-import randomString from "./utils";
+import { randomString } from "./utils";
 
 describe("Signup", () => {
   let username, email, password;
