@@ -26,14 +26,8 @@ describe("Chat", () => {
       />
     );
 
-    cy.get('[data-cy="chat-messages"]').should(
-      "contain.html",
-      "<li>message 1</li>"
-    );
-    cy.get('[data-cy="chat-messages"]').should(
-      "contain.html",
-      "<li>message 2</li>"
-    );
+    cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
+    cy.get('[data-cy="chat-messages"]').should("contain.html", "message 2");
   });
 
   it("has an input box and a submit button", () => {

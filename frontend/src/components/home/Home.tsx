@@ -40,10 +40,6 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
 
   return (
     <main>
-      <section>
-        <h1>This page will contain your chats soon...</h1>
-        <p>At least your login details work...</p>
-      </section>
       <Chat name="General" messages={messages} socket={socket} />
       <button type="button" onClick={handleLogout}>
         Log out
