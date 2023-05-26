@@ -79,7 +79,7 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           npm ci
-          npm run dev &
+          npm run start &
       - name: Setup, and Run e2e Tests
         working-directory: ./frontend
         run: |

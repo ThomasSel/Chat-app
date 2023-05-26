@@ -1,4 +1,4 @@
-import randomString from "./utils";
+import { randomString } from "./utils";
 
 describe("Login", () => {
   before(() => {

@@ -1,18 +1,36 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { NavigateFunction } from "react-router-dom";
 
-const Signup = (props) => {
-  const [formData, setFormData] = useState({
+type SignupProps = {
+  navigate: NavigateFunction;
+};
+
+type SignupFormData = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+type SignupFormField = keyof SignupFormData;
+
+const Signup = ({ navigate }: SignupProps): JSX.Element => {
+  const [formData, setFormData] = useState<SignupFormData>({
     username: "",
     email: "",
     password: "",
   });
 
-  const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  const handleChange = (
+    field: SignupFormField
+  ): React.ChangeEventHandler<HTMLInputElement> => {
+    return (e) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+
     fetch("/api/users", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -22,7 +40,7 @@ const Signup = (props) => {
         if (!response.ok) {
           throw new Error("Invalid details");
         }
-        props.navigate("/login");
+        navigate("/login");
       })
       .catch(console.error);
   };
@@ -53,7 +71,7 @@ const Signup = (props) => {
               id="email"
               data-cy="signup-email"
               required
-              match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
               value={formData.email}
               onChange={handleChange("email")}
             />
@@ -71,7 +89,12 @@ const Signup = (props) => {
               onChange={handleChange("password")}
             />
           </div>
-          <input type="submit" value="Submit" data-cy="signup-submit" />
+          <input
+            type="submit"
+            value="Submit"
+            data-cy="signup-submit"
+            className="form-submit"
+          />
         </form>
       </div>
     </main>

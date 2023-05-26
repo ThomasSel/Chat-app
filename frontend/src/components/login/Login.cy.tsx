@@ -74,7 +74,7 @@ describe("Login", () => {
 
         cy.get('[data-cy="login-password"]').type("1234Password1234");
 
-        cy.get('[data-cy="login-email"]')
+        cy.get<HTMLInputElement>('[data-cy="login-email"]')
           .then(($el) => $el[0].checkValidity())
           .should("be.false");
       });
@@ -86,7 +86,7 @@ describe("Login", () => {
 
         cy.get('[data-cy="login-email"]').type("test@test.com");
 
-        cy.get('[data-cy="login-password"]')
+        cy.get<HTMLInputElement>('[data-cy="login-password"]')
           .then(($el) => $el[0].checkValidity())
           .should("be.false");
       });

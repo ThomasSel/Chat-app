@@ -1,14 +1,15 @@
-const User = require("../../models/user");
-const testHelpers = require("../testHelpers");
+import mongoose from "mongoose";
+import User, { UserDocument } from "../../models/user";
+import { connect, disconnect } from "../testHelpers";
 
 describe(User, () => {
   beforeAll(async () => {
-    await testHelpers.connect();
+    await connect();
   });
 
   afterAll(async () => {
     await User.deleteMany({});
-    await testHelpers.disconnect();
+    await disconnect();
   });
 
   beforeEach(async () => {
@@ -16,7 +17,7 @@ describe(User, () => {
   });
 
   describe("with a valid user", () => {
-    let user;
+    let user: UserDocument;
     beforeEach(() => {
       user = new User({
         email: "test@test.com",
@@ -38,16 +39,16 @@ describe(User, () => {
     });
 
     it("has an id", () => {
-      expect(user.id).toEqual(expect.any(String));
+      expect(user._id).toEqual(expect.any(mongoose.Types.ObjectId));
     });
 
     it("can be saved with an email and password", async () => {
       await user.save();
 
       const savedUser = await User.findById(user._id);
-      expect(savedUser.email).toEqual("test@test.com");
-      expect(savedUser.username).toEqual("testUsername");
-      expect(savedUser.password).toEqual("1234Password1234");
+      expect(savedUser?.email).toEqual("test@test.com");
+      expect(savedUser?.username).toEqual("testUsername");
+      expect(savedUser?.password).toEqual("1234Password1234");
     });
   });
 

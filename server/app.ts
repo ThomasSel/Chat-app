@@ -1,9 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-const fs = require("fs/promises");
+import express from "express";
+import cors from "cors";
 
-const userRouter = require("./routes/user");
-const tokenRouter = require("./routes/token");
+import userRouter from "./routes/user";
+import tokenRouter from "./routes/token";
 
 const app = express();
 
@@ -12,8 +11,9 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/login", tokenRouter);
+
 app.get("/status", (req, res) => {
   res.status(200).json({ status: "online" });
 });
 
-module.exports = app;
+export default app;

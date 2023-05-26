@@ -1,13 +1,32 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { NavigateFunction } from "react-router-dom";
 
-const Login = (props) => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+type LoginProps = {
+  navigate: NavigateFunction;
+};
 
-  const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+type LoginFormData = {
+  email: string;
+  password: string;
+};
+
+type LoginFormField = keyof LoginFormData;
+
+const Login = ({ navigate }: LoginProps): JSX.Element => {
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (
+    field: LoginFormField
+  ): React.ChangeEventHandler<HTMLInputElement> => {
+    return (e) => {
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    };
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     fetch("/api/login", {
       method: "post",
@@ -21,8 +40,8 @@ const Login = (props) => {
       })
       .then((data) => {
         if (data) {
-          window.localStorage.setItem("token", data.token);
-          props.navigate("/chats");
+          window.sessionStorage.setItem("token", data.token);
+          navigate("/chats");
         }
       })
       .catch(console.error);
@@ -41,7 +60,7 @@ const Login = (props) => {
               id="email"
               data-cy="login-email"
               required
-              match="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
               value={formData.email}
               onChange={handleChange("email")}
             />
@@ -59,7 +78,12 @@ const Login = (props) => {
               onChange={handleChange("password")}
             />
           </div>
-          <input type="submit" value="Submit" data-cy="login-submit" />
+          <input
+            type="submit"
+            value="Submit"
+            data-cy="login-submit"
+            className="form-submit"
+          />
         </form>
       </div>
     </main>
