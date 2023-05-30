@@ -1,13 +1,16 @@
 import ws from "ws";
-import { WS_ADDRESS } from "./wsHelpers";
 
 class wsClient {
   socket: ws.WebSocket;
   messages: string[];
 
-  constructor(address = WS_ADDRESS) {
+  constructor(address: string) {
     this.socket = new ws.WebSocket(address);
     this.messages = [];
+  }
+
+  get readyState(): typeof this.socket.readyState {
+    return this.socket.readyState;
   }
 
   async expectMessages(numMessages: number) {

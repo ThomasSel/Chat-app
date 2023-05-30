@@ -1,13 +1,17 @@
 import ws from "ws";
 import http from "http";
+import { AddressInfo } from "net";
 
 import { hostWsServer } from "../wsHelpers";
 import wsClient from "../wsClient";
 
 describe("Socket Server", () => {
   let wsServer: ws.Server, httpServer: http.Server;
+  let addressInfo: AddressInfo, wsAddress: string;
   beforeAll(() => {
     [wsServer, httpServer] = hostWsServer();
+    addressInfo = <AddressInfo>httpServer.address();
+    wsAddress = `ws://localhost:${addressInfo.port}/`;
   });
 
   beforeEach(() => {
@@ -25,14 +29,14 @@ describe("Socket Server", () => {
 
   describe("broadcast messages to all clients", () => {
     it("can connect to the server", async () => {
-      const client = new wsClient();
+      const client = new wsClient(wsAddress);
 
       await client.waitReady();
       expect(client.socket.readyState).toEqual(1);
     });
 
     it("sends message back to the client", async () => {
-      const client = new wsClient();
+      const client = new wsClient(wsAddress);
       const received = client.expectMessages(1);
 
       client.send("test message");
@@ -44,9 +48,9 @@ describe("Socket Server", () => {
     });
 
     it("sends message to other clients", async () => {
-      const client1 = new wsClient();
-      const client2 = new wsClient();
-      const client3 = new wsClient();
+      const client1 = new wsClient(wsAddress);
+      const client2 = new wsClient(wsAddress);
+      const client3 = new wsClient(wsAddress);
 
       const received1 = client1.expectMessages(1);
       const received2 = client2.expectMessages(1);
@@ -60,9 +64,9 @@ describe("Socket Server", () => {
     });
 
     it("receives messages from other clients", async () => {
-      const client1 = new wsClient();
-      const client2 = new wsClient();
-      const client3 = new wsClient();
+      const client1 = new wsClient(wsAddress);
+      const client2 = new wsClient(wsAddress);
+      const client3 = new wsClient(wsAddress);
 
       const received1 = client1.expectMessages(3);
       const received2 = client2.expectMessages(3);
