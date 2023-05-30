@@ -36,7 +36,6 @@ describe("Socket Auth", () => {
       {
         userId: "12345678",
         username: "fakeUsername",
-        iat: Math.floor(Date.now() / 1000),
       },
       secret
     );
@@ -68,7 +67,6 @@ describe("Socket Auth", () => {
         {
           userId: "12345678",
           username: "fakeUsername",
-          iat: Math.floor(Date.now() / 1000),
         },
         "incorrectSecret"
       );
@@ -77,7 +75,37 @@ describe("Socket Auth", () => {
       await client.send(JSON.stringify({ token: token }));
 
       await client.waitClosed();
-      expect(client.readyState).toBeGreaterThan(1);
+      expect(client.readyState).toEqual(3);
+    });
+
+    it("closes the connection with missing userId", async () => {
+      const token = jwt.sign(
+        {
+          username: "fakeUsername",
+        },
+        secret
+      );
+
+      const client = new wsClient(wsAddress);
+      await client.send(JSON.stringify({ token: token }));
+
+      await client.waitClosed();
+      expect(client.readyState).toEqual(3);
+    });
+
+    it("closes the connection with missing username", async () => {
+      const token = jwt.sign(
+        {
+          userId: "12345678",
+        },
+        secret
+      );
+
+      const client = new wsClient(wsAddress);
+      await client.send(JSON.stringify({ token: token }));
+
+      await client.waitClosed();
+      expect(client.readyState).toEqual(3);
     });
   });
 });

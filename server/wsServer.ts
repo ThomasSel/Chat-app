@@ -26,6 +26,12 @@ wsServer.on("connection", (socket) => {
           }
         );
       });
+
+      if (payload.userId === undefined || payload.username === undefined) {
+        throw new Error("Missing JWT payloads");
+      }
+
+      console.log(payload.iat);
     } catch (err) {
       console.error(err);
       socket.close();
