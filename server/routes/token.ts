@@ -1,5 +1,5 @@
 import express from "express";
-import { generate } from "../controllers/token";
+import { generate } from "../controllers/REST/token";
 
 const router = express.Router();
 

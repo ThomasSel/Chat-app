@@ -1,6 +1,9 @@
 import ws from "ws";
 import jwt from "jsonwebtoken";
 
+import authenticateSocket from "./controllers/socket/auth";
+import broadcastMessage from "./controllers/socket/broadcast";
+
 const wsServer = new ws.WebSocketServer({ noServer: true });
 
 wsServer.on("connection", (socket) => {
@@ -8,39 +11,10 @@ wsServer.on("connection", (socket) => {
   socket.on("close", () => {});
 
   socket.onmessage = async (e: ws.MessageEvent) => {
-    try {
-      const data = JSON.parse(e.data.toString());
-      const payload = await new Promise<jwt.JwtPayload>((resolve, reject) => {
-        if (process.env.JWT_SECRET === undefined) {
-          return reject(new Error("Missing JWT_SECRET environment variable"));
-        }
-
-        jwt.verify(
-          data.token,
-          process.env.JWT_SECRET,
-          (error: any, payload: any) => {
-            if (error) {
-              return reject(error);
-            }
-            resolve(payload);
-          }
-        );
-      });
-
-      if (payload.userId === undefined || payload.username === undefined) {
-        throw new Error("Missing JWT payloads");
-      }
-
-      console.log(payload.iat);
-    } catch (err) {
-      console.error(err);
-      socket.close();
-    }
+    authenticateSocket(e, socket);
 
     socket.onmessage = (newE: ws.MessageEvent) => {
-      wsServer.clients.forEach((client) => {
-        client.send(newE.data.toString());
-      });
+      broadcastMessage(newE, wsServer.clients);
     };
   };
 });
