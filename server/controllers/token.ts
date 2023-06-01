@@ -24,7 +24,6 @@ export const generate = async (req: Request, res: Response): Promise<void> => {
     {
       userId: user.id,
       username: user.username,
-      iat: Math.floor(Date.now() / 1000),
     },
     process.env.JWT_SECRET
   );

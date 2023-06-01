@@ -31,6 +31,13 @@ describe("Socket Auth", () => {
     httpServer.close();
   });
 
+  it("can connect to the server", async () => {
+    const client = new wsClient(wsAddress);
+
+    await client.waitReady();
+    expect(client.socket.readyState).toEqual(1);
+  });
+
   describe("valid initial authentication message", () => {
     const token = jwt.sign(
       {
@@ -53,9 +60,9 @@ describe("Socket Auth", () => {
 
       await client.send(JSON.stringify({ token: token }));
 
-      const recieved = client.expectMessages(1);
+      const received = client.expectMessages(1);
       await client.send("test message");
-      await recieved;
+      await received;
 
       expect(client.messages.length).toEqual(1);
     });

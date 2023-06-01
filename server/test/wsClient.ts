@@ -1,4 +1,5 @@
 import ws from "ws";
+import jwt from "jsonwebtoken";
 
 class wsClient {
   socket: ws.WebSocket;
@@ -9,8 +10,24 @@ class wsClient {
     this.messages = [];
   }
 
-  get readyState(): typeof this.socket.readyState {
+  get readyState() {
     return this.socket.readyState;
+  }
+
+  async authenticate(user?: { userId: string; username: string }) {
+    if (process.env.JWT_SECRET === undefined) {
+      throw new Error("Missing JWT_SECRET environment variable");
+    }
+
+    const token = jwt.sign(
+      user ?? {
+        userId: "12345678",
+        username: "fakeUsername",
+      },
+      process.env.JWT_SECRET
+    );
+
+    await this.send(JSON.stringify({ token: token }));
   }
 
   async expectMessages(numMessages: number) {

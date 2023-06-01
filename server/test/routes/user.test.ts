@@ -2,7 +2,7 @@ import request from "supertest";
 
 import app from "../../app";
 import { connect, disconnect } from "../testHelpers";
-import User, { IUser, UserDocument, UserModelType } from "../../models/user";
+import User, { UserDocument } from "../../models/user";
 
 describe("User routes", () => {
   beforeAll(async () => {

@@ -28,17 +28,11 @@ describe("Socket Server", () => {
   });
 
   describe("broadcast messages to all clients", () => {
-    it("can connect to the server", async () => {
-      const client = new wsClient(wsAddress);
-
-      await client.waitReady();
-      expect(client.socket.readyState).toEqual(1);
-    });
-
     it("sends message back to the client", async () => {
       const client = new wsClient(wsAddress);
       const received = client.expectMessages(1);
 
+      await client.authenticate();
       client.send("test message");
 
       await received;
@@ -55,6 +49,7 @@ describe("Socket Server", () => {
       const received1 = client1.expectMessages(1);
       const received2 = client2.expectMessages(1);
 
+      await client3.authenticate();
       client3.send("test message");
 
       await Promise.all([received1, received2]);
@@ -72,9 +67,9 @@ describe("Socket Server", () => {
       const received2 = client2.expectMessages(3);
       const received3 = client3.expectMessages(3);
 
-      client1.send("client1");
-      client2.send("client2");
-      client3.send("client3");
+      client1.authenticate().then(() => client1.send("client1"));
+      client2.authenticate().then(() => client2.send("client2"));
+      client3.authenticate().then(() => client3.send("client3"));
 
       await Promise.all([received1, received2, received3]);
 
