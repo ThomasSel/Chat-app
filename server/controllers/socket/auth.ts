@@ -1,7 +1,11 @@
 import ws from "ws";
 import jwt from "jsonwebtoken";
 
-const authenticateSocket = async (e: ws.MessageEvent, socket: ws.WebSocket) => {
+const authenticateSocket = async (
+  e: ws.MessageEvent,
+  socket: ws.WebSocket,
+  clients: Set<ws.WebSocket>
+) => {
   try {
     const data = JSON.parse(e.data.toString());
 
@@ -25,6 +29,8 @@ const authenticateSocket = async (e: ws.MessageEvent, socket: ws.WebSocket) => {
     if (payload.userId === undefined || payload.username === undefined) {
       throw new Error("Missing JWT payloads");
     }
+
+    clients.add(socket);
   } catch (err) {
     console.error(err);
     socket.close();
