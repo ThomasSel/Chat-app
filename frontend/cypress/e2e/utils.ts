@@ -13,18 +13,25 @@ export const randomString = (length: number) => {
 
 export const createWebSocket = (
   url = "ws://localhost:8000"
+  // auth = true
 ): Promise<WebSocket> => {
   const socket = new WebSocket(url);
+
+  // if (auth) {
+  //   const token = window.sessionStorage.getItem("token");
+  //   // Send the jwt when the connection opens
+  //   socket.addEventListener("open", () => {
+  //     socket.send(JSON.stringify({ token: token }));
+  //   });
+  // }
 
   return new Promise<WebSocket>((resolve, reject) => {
     const interval = setInterval(() => {
       if (socket.readyState === 1) {
         clearInterval(interval);
-        console.log("Success: clearing interval");
         resolve(socket);
       } else if (socket.readyState >= 2) {
         clearInterval(interval);
-        console.log("Failure: clearing interval");
         reject(new Error("failure opening ws connection"));
       }
     }, 10);

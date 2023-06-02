@@ -35,21 +35,33 @@ describe("chat page", () => {
   });
 
   it("receives and displays messages from other users", () => {
+    let ws1: WebSocket, ws2: WebSocket;
+
     cy.login("test@test.com", "1234Password1234");
     cy.visit("/chats").then(async () => {
-      const [ws1, ws2] = await Promise.all([
-        createWebSocket(),
-        createWebSocket(),
-      ]);
+      [ws1, ws2] = await Promise.all([createWebSocket(), createWebSocket()]);
 
-      ws1.send("message 1");
-      ws2.send("message 2");
-
-      ws1.close();
-      ws2.close();
+      const token = window.sessionStorage.getItem("token");
+      ws1.send(JSON.stringify({ token: token }));
+      ws2.send(JSON.stringify({ token: token }));
     });
 
-    cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
-    cy.get('[data-cy="chat-messages"]').should("contain.text", "message 2");
+    // Type in the box to slow the test down and give server time to
+    //   authenticate ws1 and ws2
+    cy.get('[data-cy="chat-input"]')
+      .type(
+        "Long message to slow cypress down and give the server time to authenticate ws1 and ws2"
+      )
+      .then(() => {
+        ws1.send("message 1");
+        ws2.send("message 2");
+
+        ws1.close();
+        ws2.close();
+      })
+      .then(() => {
+        cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
+        cy.get('[data-cy="chat-messages"]').should("contain.text", "message 2");
+      });
   });
 });
