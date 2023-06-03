@@ -1,4 +1,5 @@
 import request from "supertest";
+import bcrypt from "bcryptjs";
 
 import app from "../../app";
 import { connect, disconnect } from "../testHelpers";
@@ -8,10 +9,14 @@ import jwt from "jsonwebtoken";
 describe("Login routes", () => {
   beforeAll(async () => {
     await connect();
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash("1234Password1234", salt);
+
     const user = new User({
       email: "test@test.com",
       username: "fakeUsername",
-      password: "1234Password1234",
+      password: hashedPassword,
     });
     await user.save();
   });

@@ -1,8 +1,13 @@
-import { createWebSocket } from "./utils";
+import { createWebSocket, randomString } from "./utils";
 
 describe("chat page", () => {
+  let username: string, email: string, password: string;
   before(() => {
-    cy.signup("fakeUsername", "test@test.com", "1234Password1234");
+    username = randomString(8);
+    email = `${randomString(8)}@test.com`;
+    password = randomString(8);
+
+    cy.signup(username, email, password);
   });
 
   it("redirects to login with no token", () => {
@@ -12,15 +17,13 @@ describe("chat page", () => {
   });
 
   it("doesn't redirect with a token", () => {
-    cy.login("test@test.com", "1234Password1234");
-    cy.visit("/chats");
+    cy.login(email, password);
 
     cy.url().should("include", "/chats");
   });
 
   it("receives messages it submits", () => {
-    cy.login("test@test.com", "1234Password1234");
-    cy.visit("/chats");
+    cy.login(email, password);
 
     cy.get('[data-cy="chat-input"]').type("message 1");
     cy.get('[data-cy="chat-submit"]').click();
@@ -37,14 +40,16 @@ describe("chat page", () => {
   it("receives and displays messages from other users", () => {
     let ws1: WebSocket, ws2: WebSocket;
 
-    cy.login("test@test.com", "1234Password1234");
-    cy.visit("/chats").then(async () => {
-      [ws1, ws2] = await Promise.all([createWebSocket(), createWebSocket()]);
+    cy.login(email, password);
+    cy.url()
+      .should("include", "/chats")
+      .then(async () => {
+        [ws1, ws2] = await Promise.all([createWebSocket(), createWebSocket()]);
 
-      const token = window.sessionStorage.getItem("token");
-      ws1.send(JSON.stringify({ token: token }));
-      ws2.send(JSON.stringify({ token: token }));
-    });
+        const token = window.sessionStorage.getItem("token");
+        ws1.send(JSON.stringify({ token: token }));
+        ws2.send(JSON.stringify({ token: token }));
+      });
 
     // Type in the box to slow the test down and give server time to
     //   authenticate ws1 and ws2

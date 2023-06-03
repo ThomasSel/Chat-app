@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import User from "../../models/user";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+import User from "../../models/user";
 
 export const generate = async (req: Request, res: Response): Promise<void> => {
   if (process.env.JWT_SECRET === undefined) {
@@ -15,7 +17,16 @@ export const generate = async (req: Request, res: Response): Promise<void> => {
   }
 
   const user = await User.findOne({ email: req.body.email });
-  if (!user || user.password !== req.body.password) {
+  if (user === null) {
+    res.status(401).json({ message: "Invalid details" });
+    return;
+  }
+
+  const correctPassword = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (!correctPassword) {
     res.status(401).json({ message: "Invalid details" });
     return;
   }
