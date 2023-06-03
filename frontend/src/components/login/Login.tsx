@@ -36,6 +36,10 @@ const Login = ({ navigate }: LoginProps): JSX.Element => {
       .then((response) => {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error(
+            `/api/login responded with status ${response.status} ${response.statusText}`
+          );
         }
       })
       .then((data) => {

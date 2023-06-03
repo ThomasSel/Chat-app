@@ -1,7 +1,7 @@
 import { randomString } from "./utils";
 
 describe("Signup", () => {
-  let username, email, password;
+  let username: string, email: string, password: string;
   beforeEach(() => {
     cy.visit("/signup");
 

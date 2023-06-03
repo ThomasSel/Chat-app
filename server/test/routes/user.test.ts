@@ -1,4 +1,5 @@
 import request from "supertest";
+import bcrypt from "bcryptjs";
 
 import app from "../../app";
 import { connect, disconnect } from "../testHelpers";
@@ -33,16 +34,20 @@ describe("User routes", () => {
       expect(response.body.message).toEqual("User created");
     });
 
-    it("saves a user with the given email", async () => {
+    it("saves a user with the given email", () => {
       expect(newUser?.email).toEqual("test@test.com");
     });
 
-    it("saves a user with the given username", async () => {
+    it("saves a user with the given username", () => {
       expect(newUser?.username).toEqual("fakeUsername");
     });
 
     it("saves a user with the given password", async () => {
-      expect(newUser?.password).toEqual("1234Password1234");
+      const passwordComp = await bcrypt.compare(
+        "1234Password1234",
+        newUser?.password ?? ""
+      );
+      expect(passwordComp).toBeTruthy();
     });
   });
 
