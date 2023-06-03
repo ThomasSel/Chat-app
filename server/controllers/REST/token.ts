@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-
-import User from "../models/user";
 import jwt from "jsonwebtoken";
+
+import User from "../../models/user";
 
 export const generate = async (req: Request, res: Response): Promise<void> => {
   if (process.env.JWT_SECRET === undefined) {
@@ -35,7 +35,6 @@ export const generate = async (req: Request, res: Response): Promise<void> => {
     {
       userId: user.id,
       username: user.username,
-      iat: Math.floor(Date.now() / 1000),
     },
     process.env.JWT_SECRET
   );

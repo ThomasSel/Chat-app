@@ -19,11 +19,18 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
     }
 
     const newSocket = new WebSocket("ws://localhost:8000");
+
+    // Authenticate when the connection opens
+    newSocket.addEventListener("open", () => {
+      newSocket.send(JSON.stringify({ token: token }));
+    });
+
     newSocket.addEventListener("message", async (event) => {
       const data: Blob | string = event.data;
       const message = data instanceof Blob ? await data.text() : data;
       setMessages((prev) => [...prev, message]);
     });
+
     setSocket(newSocket);
 
     return () => {

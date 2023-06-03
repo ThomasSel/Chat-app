@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
-import User from "../models/user";
+import User from "../../models/user";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   const email: string = req.body.email;
