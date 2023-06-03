@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 
@@ -15,7 +17,16 @@ export const generate = async (req: Request, res: Response): Promise<void> => {
   }
 
   const user = await User.findOne({ email: req.body.email });
-  if (!user || user.password !== req.body.password) {
+  if (user === null) {
+    res.status(401).json({ message: "Invalid details" });
+    return;
+  }
+
+  const correctPassword = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (!correctPassword) {
     res.status(401).json({ message: "Invalid details" });
     return;
   }
