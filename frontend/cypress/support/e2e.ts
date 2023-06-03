@@ -24,7 +24,7 @@ Cypress.Commands.add(
 Cypress.Commands.add("login", (email: string, password: string) => {
   cy.visit("/login");
 
-  cy.get('[data-cy="login-email"]').type("test@test.com");
-  cy.get('[data-cy="login-password"]').type("1234Password1234");
+  cy.get('[data-cy="login-email"]').type(email);
+  cy.get('[data-cy="login-password"]').type(password);
   cy.get('[data-cy="login-submit"]').click();
 });
