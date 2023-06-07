@@ -86,6 +86,22 @@ describe("Socket Server", () => {
 
         expect(client2.messages[0]).toEqual("second message");
       });
+
+      it("doesn't broadcast when JSON keys are invalid", async () => {
+        const client1 = new wsClient(wsAddress);
+        const client2 = new wsClient(wsAddress);
+
+        await Promise.all([client1.authenticate(), client2.authenticate()]);
+
+        const received = client2.expectMessages(1);
+
+        client1.send(JSON.stringify({ text: "first message" }));
+        client1.send(JSON.stringify({ message: "second message" }));
+
+        await received;
+
+        expect(client2.messages[0]).toEqual("second message");
+      });
     });
 
     it("sends message back to the client", async () => {
