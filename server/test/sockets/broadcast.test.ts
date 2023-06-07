@@ -4,6 +4,7 @@ import { AddressInfo } from "net";
 
 import { hostWsServer } from "../wsHelpers";
 import wsClient from "../wsClient";
+import { promiseHooks } from "v8";
 
 describe("Socket Server", () => {
   let wsServer: ws.Server, httpServer: http.Server;
@@ -27,7 +28,59 @@ describe("Socket Server", () => {
     httpServer.close();
   });
 
-  describe("broadcast messages to authenticated clients", () => {
+  describe("when not authenticated", () => {
+    it("doesn't send auth message to other clients", async () => {
+      const client1 = new wsClient(wsAddress);
+      const client2 = new wsClient(wsAddress);
+
+      await client1.authenticate();
+      const received = client1.expectMessages(1);
+
+      await client2.authenticate();
+      client2.send("fakeMessage");
+
+      await received;
+      expect(client1.messages[0]).toEqual("fakeMessage");
+    });
+
+    it("doesn't receive messsages from other clients", async () => {
+      const client1 = new wsClient(wsAddress);
+      const client2 = new wsClient(wsAddress);
+
+      const received = client1.expectMessages(1);
+
+      await client2.authenticate();
+      client2.send("This message shouldn't be broadcast to client1");
+
+      await client1.authenticate();
+      client2.send("This message should be broadcast to client1");
+
+      await received;
+      expect(client1.messages[0]).toEqual(
+        "This message should be broadcast to client1"
+      );
+    });
+  });
+
+  describe("when authenticated", () => {
+    describe("invalid message JSON", () => {
+      it("doesn't broadcast non JSON message", async () => {
+        const client1 = new wsClient(wsAddress);
+        const client2 = new wsClient(wsAddress);
+
+        await Promise.all([client1.authenticate(), client2.authenticate()]);
+
+        const received = client2.expectMessages(1);
+
+        client1.send("first message");
+        client1.send(JSON.stringify({ message: "second message" }));
+
+        await received;
+
+        expect(client2.messages[0]).toEqual("second message");
+      });
+    });
+
     it("sends message back to the client", async () => {
       const client = new wsClient(wsAddress);
       const received = client.expectMessages(1);
@@ -83,40 +136,6 @@ describe("Socket Server", () => {
         expect(client2.messages).toContain(value);
         expect(client2.messages).toContain(value);
       });
-    });
-  });
-
-  describe("when not authenticated", () => {
-    it("doesn't send auth message to other clients", async () => {
-      const client1 = new wsClient(wsAddress);
-      const client2 = new wsClient(wsAddress);
-
-      await client1.authenticate();
-      const received = client1.expectMessages(1);
-
-      await client2.authenticate();
-      client2.send("fakeMessage");
-
-      await received;
-      expect(client1.messages[0]).toEqual("fakeMessage");
-    });
-
-    it("doesn't broadcast messages to unauthenticated clients", async () => {
-      const client1 = new wsClient(wsAddress);
-      const client2 = new wsClient(wsAddress);
-
-      const received = client1.expectMessages(1);
-
-      await client2.authenticate();
-      client2.send("This message shouldn't be broadcast to client1");
-
-      await client1.authenticate();
-      client2.send("This message should be broadcast to client1");
-
-      await received;
-      expect(client1.messages[0]).toEqual(
-        "This message should be broadcast to client1"
-      );
     });
   });
 });
