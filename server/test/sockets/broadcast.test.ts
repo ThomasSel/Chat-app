@@ -4,7 +4,6 @@ import { AddressInfo } from "net";
 
 import { hostWsServer } from "../wsHelpers";
 import wsClient from "../wsClient";
-import { promiseHooks } from "v8";
 
 describe("Socket Server", () => {
   let wsServer: ws.Server, httpServer: http.Server;
@@ -37,7 +36,7 @@ describe("Socket Server", () => {
       const received = client1.expectMessages(1);
 
       await client2.authenticate();
-      client2.send("fakeMessage");
+      client2.send(JSON.stringify({ message: "fakeMessage" }));
 
       await received;
       expect(client1.messages[0]).toEqual("fakeMessage");
@@ -50,10 +49,18 @@ describe("Socket Server", () => {
       const received = client1.expectMessages(1);
 
       await client2.authenticate();
-      client2.send("This message shouldn't be broadcast to client1");
+      client2.send(
+        JSON.stringify({
+          message: "This message shouldn't be broadcast to client1",
+        })
+      );
 
       await client1.authenticate();
-      client2.send("This message should be broadcast to client1");
+      client2.send(
+        JSON.stringify({
+          message: "This message should be broadcast to client1",
+        })
+      );
 
       await received;
       expect(client1.messages[0]).toEqual(
@@ -86,7 +93,7 @@ describe("Socket Server", () => {
       const received = client.expectMessages(1);
 
       await client.authenticate();
-      client.send("test message");
+      client.send(JSON.stringify({ message: "test message" }));
 
       await received;
 
@@ -108,7 +115,7 @@ describe("Socket Server", () => {
       const received1 = client1.expectMessages(1);
       const received2 = client2.expectMessages(1);
 
-      client3.send("test message");
+      client3.send(JSON.stringify({ message: "test message" }));
 
       await Promise.all([received1, received2]);
 
@@ -125,9 +132,15 @@ describe("Socket Server", () => {
       const received2 = client2.expectMessages(3);
       const received3 = client3.expectMessages(3);
 
-      client1.authenticate().then(() => client1.send("client1"));
-      client2.authenticate().then(() => client2.send("client2"));
-      client3.authenticate().then(() => client3.send("client3"));
+      client1
+        .authenticate()
+        .then(() => client1.send(JSON.stringify({ message: "client1" })));
+      client2
+        .authenticate()
+        .then(() => client2.send(JSON.stringify({ message: "client2" })));
+      client3
+        .authenticate()
+        .then(() => client3.send(JSON.stringify({ message: "client3" })));
 
       await Promise.all([received1, received2, received3]);
 
