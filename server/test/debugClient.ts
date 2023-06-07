@@ -1,6 +1,9 @@
 import ws from "ws";
 
-/* A websocket wrapper with debugging listeners already defined */
+/*
+ * A websocket wrapper with debugging listeners already defined
+ * Mainly designed for use inside of the ts-node REPL
+ */
 export default class DebugClient {
   static count: number = 0;
 

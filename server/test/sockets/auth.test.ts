@@ -61,7 +61,7 @@ describe("Socket Auth", () => {
       await client.send(JSON.stringify({ token: token }));
 
       const received = client.expectMessages(1);
-      await client.send("test message");
+      await client.send(JSON.stringify({ message: "test message" }));
       await received;
 
       expect(client.messages.length).toEqual(1);
