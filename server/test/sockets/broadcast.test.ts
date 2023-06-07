@@ -183,53 +183,70 @@ describe("Socket Server", () => {
       });
     });
 
-    xit("sends message to other authenticated clients", async () => {
-      const client1 = new wsClient(wsAddress);
-      const client2 = new wsClient(wsAddress);
-      const client3 = new wsClient(wsAddress);
+    describe("broadcasts message to other authenticated users", () => {
+      it("sends message to other authenticated clients", async () => {
+        const client1 = new wsClient(wsAddress);
+        const client2 = new wsClient(wsAddress);
+        const client3 = new wsClient(wsAddress);
 
-      await Promise.all([
-        client1.authenticate(),
-        client2.authenticate(),
-        client3.authenticate(),
-      ]);
+        await Promise.all([
+          client1.authenticate({ userId: "uijdvnxcm", username: "t6rygb" }),
+          client2.authenticate({ userId: "tvbcxhzja", username: "njkeu2" }),
+          client3.authenticate({ userId: "67ehbmsnd", username: "pbfysy" }),
+        ]);
 
-      const received1 = client1.expectMessages(1);
-      const received2 = client2.expectMessages(1);
+        const received1 = client1.expectMessages(1);
+        const received2 = client2.expectMessages(1);
 
-      client3.send(JSON.stringify({ message: "test message" }));
+        client3.send(JSON.stringify({ message: "test message" }));
 
-      await Promise.all([received1, received2]);
+        await Promise.all([received1, received2]);
 
-      expect(client1.messages[0]).toEqual("test message");
-      expect(client2.messages[0]).toEqual("test message");
-    });
+        const messageData1 = JSON.parse(client1.messages[0]);
+        const messageData2 = JSON.parse(client2.messages[0]);
+        if (
+          !isServerMessageData(messageData1) ||
+          !isServerMessageData(messageData2)
+        ) {
+          throw new Error("Server returned the wrong data schema");
+        }
 
-    xit("receives messages from other authenticated clients", async () => {
-      const client1 = new wsClient(wsAddress);
-      const client2 = new wsClient(wsAddress);
-      const client3 = new wsClient(wsAddress);
+        expect(messageData1.text).toContain("test message");
+        expect(messageData1.userId).toContain("67ehbmsnd");
+        expect(messageData1.username).toContain("pbfysy");
 
-      const received1 = client1.expectMessages(3);
-      const received2 = client2.expectMessages(3);
-      const received3 = client3.expectMessages(3);
+        expect(messageData2.text).toContain("test message");
+        expect(messageData2.userId).toContain("67ehbmsnd");
+        expect(messageData2.username).toContain("pbfysy");
+      });
 
-      client1
-        .authenticate()
-        .then(() => client1.send(JSON.stringify({ message: "client1" })));
-      client2
-        .authenticate()
-        .then(() => client2.send(JSON.stringify({ message: "client2" })));
-      client3
-        .authenticate()
-        .then(() => client3.send(JSON.stringify({ message: "client3" })));
+      it("receives messages from other authenticated clients", async () => {
+        const client1 = new wsClient(wsAddress);
+        const client2 = new wsClient(wsAddress);
+        const client3 = new wsClient(wsAddress);
 
-      await Promise.all([received1, received2, received3]);
+        const received1 = client1.expectMessages(3);
+        const received2 = client2.expectMessages(3);
+        const received3 = client3.expectMessages(3);
 
-      ["client1", "client2", "client3"].forEach((value) => {
-        expect(client1.messages).toContain(value);
-        expect(client2.messages).toContain(value);
-        expect(client2.messages).toContain(value);
+        client1
+          .authenticate()
+          .then(() => client1.send(JSON.stringify({ message: "client1" })));
+        client2
+          .authenticate()
+          .then(() => client2.send(JSON.stringify({ message: "client2" })));
+        client3
+          .authenticate()
+          .then(() => client3.send(JSON.stringify({ message: "client3" })));
+
+        await Promise.all([received1, received2, received3]);
+
+        [client1, client2, client3].forEach((client) => {
+          const stringifiedMessages = JSON.stringify(client.messages);
+          expect(stringifiedMessages).toContain("client1");
+          expect(stringifiedMessages).toContain("client2");
+          expect(stringifiedMessages).toContain("client3");
+        });
       });
     });
   });

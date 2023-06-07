@@ -23,7 +23,8 @@ const broadcastMessage = (
   clients: Iterable<Client>
 ) => {
   if (client.userId === undefined || client.username === undefined) {
-    throw new Error("Client does not have a userId or password");
+    console.error(new Error("Client does not have a userId or password"));
+    return client.socket.close();
   }
 
   let messageData: ClientMessageData;
