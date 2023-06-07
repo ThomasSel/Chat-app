@@ -1,10 +1,33 @@
+import { Message } from "../home/Home";
 import Chat from "./Chat";
+
+const messages: Message[] = [
+  {
+    text: "firstMessage",
+    userId: "12345678",
+    username: "UserOne",
+    iat: 1686155440000,
+  },
+  {
+    text: "secondMessage",
+    userId: "87654321",
+    username: "UserTwo",
+    iat: 1686155450000,
+  },
+  {
+    text: "thirdMessage",
+    userId: "12345678",
+    username: "UserOne",
+    iat: 1686155460000,
+  },
+];
 
 describe("Chat", () => {
   let socketMock: any;
   beforeEach(() => {
     socketMock = { send: (data: string): void => {} };
   });
+
   it("displays the name of the chat", () => {
     cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
 
@@ -18,19 +41,21 @@ describe("Chat", () => {
   });
 
   it("displays all messages given as props", () => {
-    cy.mount(
-      <Chat
-        name="Test"
-        messages={["message 1", "message 2"]}
-        socket={socketMock}
-      />
-    );
+    cy.mount(<Chat name="Test" messages={messages} socket={socketMock} />);
 
-    cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
-    cy.get('[data-cy="chat-messages"]').should("contain.html", "message 2");
+    cy.get('[data-cy="chat-messages"]').should("contain.text", "firstMessage");
+    cy.get('[data-cy="chat-messages"]').should("contain.text", "secondMessage");
+    cy.get('[data-cy="chat-messages"]').should("contain.text", "thirdMessage");
   });
 
   it("has an input box and a submit button", () => {
+    cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
+
+    cy.get('[data-cy="chat-input"]').should("be.visible");
+    cy.get('[data-cy="chat-submit"]').should("be.visible");
+  });
+
+  it("sends a message when clicking submit", () => {
     cy.spy(socketMock, "send").as("socketMock");
 
     cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
@@ -38,7 +63,7 @@ describe("Chat", () => {
     cy.get('[data-cy="chat-input"]').type("testMessage");
     cy.get('[data-cy="chat-submit"]').click();
 
-    cy.get("@socketMock").should("be.calledWith", "testMessage");
+    cy.get("@socketMock").should("be.calledWith", '{"message":"testMessage"}');
   });
 
   it("sets the message input blank after sumbitting", () => {

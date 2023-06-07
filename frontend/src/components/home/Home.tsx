@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { NavigateFunction } from "react-router-dom";
+
 import Chat from "../chat/Chat";
 
 type HomeProps = {
   navigate: NavigateFunction;
 };
 
+export type Message = {
+  text: string;
+  userId: string;
+  username: string;
+  iat: number;
+};
+
+export const isMessage = (o: object): o is Message => {
+  return "text" in o && "userId" in o && "username" in o && "iat" in o;
+};
+
 const Home = ({ navigate }: HomeProps): JSX.Element => {
   const [token, setToken] = useState<string | null>(
     window.sessionStorage.getItem("token")
   );
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -26,9 +38,16 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
     });
 
     newSocket.addEventListener("message", async (event) => {
-      const data: Blob | string = event.data;
-      const message = data instanceof Blob ? await data.text() : data;
-      setMessages((prev) => [...prev, message]);
+      const streamData: Blob | string = event.data;
+      const messageString =
+        streamData instanceof Blob ? await streamData.text() : streamData;
+
+      const messageData = JSON.parse(messageString);
+      if (!isMessage(messageData)) {
+        return console.error(new Error("Invalid server message"));
+      }
+
+      setMessages((prev) => [...prev, messageData]);
     });
 
     setSocket(newSocket);

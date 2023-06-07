@@ -1,14 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
+
+import { Message } from "../home/Home";
 import "./Chat.css";
 
 type ChatProps = {
   name: string;
-  messages: string[];
+  messages: Message[];
   socket: WebSocket;
 };
 
 const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
-  const [message, setMessage] = useState<string>("");
+  const [messageInput, setMessageInput] = useState<string>("");
   const messagesRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
@@ -17,8 +19,8 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
 
   const handleSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
-    socket.send(message);
-    setMessage("");
+    socket.send(JSON.stringify({ message: messageInput }));
+    setMessageInput("");
   };
 
   return (
@@ -28,7 +30,7 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
       <ul data-cy="chat-messages" className="chat-messages" ref={messagesRef}>
         {messages.map((message, index) => (
           <li key={index} className="chat-message">
-            {message}
+            {message.text}
           </li>
         ))}
       </ul>
@@ -37,8 +39,8 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
         <input
           type="text"
           data-cy="chat-input"
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
+          onChange={(e) => setMessageInput(e.target.value)}
+          value={messageInput}
           placeholder={`Send a message to #${name}`}
           className="message-input"
         />
