@@ -54,9 +54,25 @@ describe("Chat", () => {
       />
     );
 
-    cy.get('[data-cy="chat-messages"]').should("contain.text", "firstMessage");
-    cy.get('[data-cy="chat-messages"]').should("contain.text", "secondMessage");
-    cy.get('[data-cy="chat-messages"]').should("contain.text", "thirdMessage");
+    cy.get('[data-cy="chat-messages"]')
+      .should("contain.text", "firstMessage")
+      .and("contain.text", "secondMessage")
+      .and("contain.text", "thirdMessage");
+  });
+
+  it("shows other message sender's username (not self)", () => {
+    cy.mount(
+      <Chat
+        name="Test"
+        messages={messages}
+        socket={socketMock}
+        userId={"12345678"}
+      />
+    );
+
+    cy.get('[data-cy="chat-messages"]')
+      .should("not.contain.text", "UserOne")
+      .and("contain.text", "UserTwo");
   });
 
   it("styles messages from others differently", () => {

@@ -29,17 +29,18 @@ const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
       <h1 data-cy="chat-name">{name}</h1>
 
       <ul data-cy="chat-messages" className="chat-messages" ref={messagesRef}>
-        {messages.map((message, index) => {
+        {messages.map((message) => {
           if (message.userId === userId) {
             return (
-              <li key={index} className="chat-message-self">
-                {message.text}
+              <li key={`${message.userId}-${message.iat}-${message.text[0]}`}>
+                <div className="chat-message-self">{message.text}</div>
               </li>
             );
           } else {
             return (
-              <li key={index} className="chat-message">
-                {message.text}
+              <li key={`${message.userId}-${message.iat}-${message.text[0]}`}>
+                <div className="message-sender">{message.username}</div>
+                <div className="chat-message">{message.text}</div>
               </li>
             );
           }
