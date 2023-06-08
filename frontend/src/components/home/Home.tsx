@@ -23,7 +23,7 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
   const [token, setToken] = useState<string | null>(
     window.sessionStorage.getItem("token")
   );
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[][]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -43,12 +43,28 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
       const messageString =
         streamData instanceof Blob ? await streamData.text() : streamData;
 
-      const messageData = JSON.parse(messageString);
-      if (!isMessage(messageData)) {
+      const message = JSON.parse(messageString);
+      if (!isMessage(message)) {
         return console.error(new Error("Invalid server message"));
       }
 
-      setMessages((prev) => [...prev, messageData]);
+      setMessages((prev) => {
+        if (prev.length === 0) {
+          return [...prev, [message]];
+        }
+
+        const lastMessageGroup = prev[prev.length - 1];
+        const lastMessage = lastMessageGroup[lastMessageGroup.length - 1];
+
+        if (message.userId === lastMessage?.userId) {
+          return [
+            ...prev.slice(0, prev.length - 1),
+            [...lastMessageGroup, message],
+          ];
+        } else {
+          return [...prev, [message]];
+        }
+      });
     });
 
     setSocket(newSocket);

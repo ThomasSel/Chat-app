@@ -5,7 +5,7 @@ import "./Chat.css";
 
 type ChatProps = {
   name: string;
-  messages: Message[];
+  messages: Message[][];
   socket: WebSocket;
   userId: string;
 };
@@ -29,21 +29,55 @@ const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
       <h1 data-cy="chat-name">{name}</h1>
 
       <ul data-cy="chat-messages" className="chat-messages" ref={messagesRef}>
-        {messages.map((message) => {
-          if (message.userId === userId) {
-            return (
-              <li key={`${message.userId}-${message.iat}-${message.text[0]}`}>
-                <div className="chat-message-self">{message.text}</div>
-              </li>
-            );
-          } else {
-            return (
-              <li key={`${message.userId}-${message.iat}-${message.text[0]}`}>
-                <div className="message-sender">{message.username}</div>
-                <div className="chat-message">{message.text}</div>
-              </li>
-            );
-          }
+        {messages.map((messageGroup) => {
+          return (
+            <ul className="message-group">
+              {messageGroup[0].userId === userId ? (
+                messageGroup.map((message) => (
+                  <li
+                    key={`${message.userId}-${message.iat}-${message.text[0]}`}
+                    className="chat-message-self"
+                  >
+                    {message.text}
+                  </li>
+                ))
+              ) : (
+                <>
+                  <div className="message-sender" data-cy="message-sender">
+                    {messageGroup[0].username}
+                  </div>
+                  {messageGroup.map((message) => (
+                    <li
+                      key={`${message.userId}-${message.iat}-${message.text[0]}`}
+                      className="chat-message"
+                    >
+                      {message.text}
+                    </li>
+                  ))}
+                </>
+              )}
+              {/* {messageGroup.map((message) => {
+                if (message.userId === userId) {
+                  return (
+                    <li
+                      key={`${message.userId}-${message.iat}-${message.text[0]}`}
+                    >
+                      <div className="chat-message-self">{message.text}</div>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li
+                      key={`${message.userId}-${message.iat}-${message.text[0]}`}
+                    >
+                      <div className="message-sender">{message.username}</div>
+                      <div className="chat-message">{message.text}</div>
+                    </li>
+                  );
+                } }
+              })*/}
+            </ul>
+          );
         })}
       </ul>
 

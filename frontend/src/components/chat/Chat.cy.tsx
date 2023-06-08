@@ -1,25 +1,29 @@
 import { Message } from "../home/Home";
 import Chat from "./Chat";
 
-const messages: Message[] = [
-  {
-    text: "firstMessage",
-    userId: "12345678",
-    username: "UserOne",
-    iat: 1686155440000,
-  },
-  {
-    text: "secondMessage",
-    userId: "87654321",
-    username: "UserTwo",
-    iat: 1686155450000,
-  },
-  {
-    text: "thirdMessage",
-    userId: "12345678",
-    username: "UserOne",
-    iat: 1686155460000,
-  },
+const messages: Message[][] = [
+  [
+    {
+      text: "firstMessage",
+      userId: "12345678",
+      username: "UserOne",
+      iat: 1686155440000,
+    },
+    {
+      text: "secondMessage",
+      userId: "12345678",
+      username: "UserOne",
+      iat: 1686155450000,
+    },
+  ],
+  [
+    {
+      text: "thirdMessage",
+      userId: "87654321",
+      username: "UserTwo",
+      iat: 1686155460000,
+    },
+  ],
 ];
 
 describe("Chat", () => {
@@ -87,8 +91,8 @@ describe("Chat", () => {
 
     cy.get(".chat-message-self")
       .should("contain.text", "firstMessage")
-      .and("contain.text", "thirdMessage");
-    cy.get(".chat-message").should("contain.text", "secondMessage");
+      .and("contain.text", "secondMessage");
+    cy.get(".chat-message").should("contain.text", "thirdMessage");
 
     cy.mount(
       <Chat
@@ -101,8 +105,21 @@ describe("Chat", () => {
 
     cy.get(".chat-message")
       .should("contain.text", "firstMessage")
-      .and("contain.text", "thirdMessage");
-    cy.get(".chat-message-self").should("contain.text", "secondMessage");
+      .and("contain.text", "secondMessage");
+    cy.get(".chat-message-self").should("contain.text", "thirdMessage");
+  });
+
+  it("groups messages properly", () => {
+    cy.mount(
+      <Chat
+        name="Test"
+        messages={messages}
+        socket={socketMock}
+        userId={"87654321"}
+      />
+    );
+
+    cy.get(".message-sender").should("have.length", 1);
   });
 
   describe("message input", () => {
@@ -141,7 +158,7 @@ describe("Chat", () => {
       );
     });
 
-    it("sets the message input blank after sumbitting", () => {
+    it("sets the message input blank after submitting", () => {
       cy.mount(
         <Chat
           name="Test"
