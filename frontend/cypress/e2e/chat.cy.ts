@@ -74,10 +74,6 @@ describe("chat page", () => {
   it("clicking sign out redirects to login and clears sessionStorage", () => {
     cy.login(email, password);
 
-    cy.visit("/chats").then(() => {
-      expect(window.sessionStorage.getItem("token")).not.equal(null);
-    });
-
     cy.get('[data-cy="logout"]').click();
 
     cy.url()

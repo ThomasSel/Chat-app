@@ -31,7 +31,10 @@ const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
       <ul data-cy="chat-messages" className="chat-messages" ref={messagesRef}>
         {messages.map((messageGroup) => {
           return (
-            <ul className="message-group">
+            <ul
+              className="message-group"
+              key={`${messageGroup[0].userId}-${messageGroup[0].iat}-message-group`}
+            >
               {messageGroup[0].userId === userId ? (
                 messageGroup.map((message) => (
                   <li
@@ -43,7 +46,11 @@ const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
                 ))
               ) : (
                 <>
-                  <div className="message-sender" data-cy="message-sender">
+                  <div
+                    key={`${messageGroup[0].userId}-${messageGroup[0].iat}-sender-tag`}
+                    className="message-sender"
+                    data-cy="message-sender"
+                  >
                     {messageGroup[0].username}
                   </div>
                   {messageGroup.map((message) => (
