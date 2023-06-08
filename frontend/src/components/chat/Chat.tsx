@@ -7,9 +7,10 @@ type ChatProps = {
   name: string;
   messages: Message[];
   socket: WebSocket;
+  userId: string;
 };
 
-const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
+const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
   const [messageInput, setMessageInput] = useState<string>("");
   const messagesRef = useRef<HTMLUListElement | null>(null);
 
@@ -28,11 +29,21 @@ const Chat = ({ name, messages, socket }: ChatProps): JSX.Element => {
       <h1 data-cy="chat-name">{name}</h1>
 
       <ul data-cy="chat-messages" className="chat-messages" ref={messagesRef}>
-        {messages.map((message, index) => (
-          <li key={index} className="chat-message">
-            {message.text}
-          </li>
-        ))}
+        {messages.map((message, index) => {
+          if (message.userId === userId) {
+            return (
+              <li key={index} className="chat-message-self">
+                {message.text}
+              </li>
+            );
+          } else {
+            return (
+              <li key={index} className="chat-message">
+                {message.text}
+              </li>
+            );
+          }
+        })}
       </ul>
 
       <form onSubmit={handleSubmit} className="message-form">

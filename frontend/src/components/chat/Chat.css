@@ -25,13 +25,22 @@
   margin-block: 0.75rem;
 }
 
-.chat-message {
+.chat-message,
+.chat-message-self {
   width: fit-content;
-  padding-block: 6px;
-  padding-inline: 10px;
+  max-width: 65%;
+  padding-block: 8px;
+  padding-inline: 12px;
   border-radius: 16px;
-  background: #e0e0e0;
   margin-bottom: 4px;
+  background: #e0e0e0;
+  display: flex;
+  justify-content: center;
+}
+
+.chat-message-self {
+  align-self: flex-end;
+  background: #a4eda4;
 }
 
 .message-form {

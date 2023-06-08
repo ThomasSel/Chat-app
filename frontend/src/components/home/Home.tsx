@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NavigateFunction } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 import Chat from "../chat/Chat";
 
@@ -64,9 +65,19 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
     navigate("/login");
   };
 
+  let userId: string;
+  if (null !== token) {
+    userId = useMemo<string>(() => jwtDecode<any>(token).userId, [token]);
+  }
+
   return (
     <main>
-      <Chat name="General" messages={messages} socket={socket} />
+      <Chat
+        name="General"
+        messages={messages}
+        socket={socket}
+        userId={userId}
+      />
       <button type="button" onClick={handleLogout}>
         Log out
       </button>

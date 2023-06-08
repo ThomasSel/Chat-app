@@ -29,49 +29,116 @@ describe("Chat", () => {
   });
 
   it("displays the name of the chat", () => {
-    cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
+    cy.mount(
+      <Chat name="Test" messages={[]} socket={socketMock} userId={"12345678"} />
+    );
 
     cy.get('[data-cy="chat-name"]').should("contain", "Test");
   });
 
   it("when messages are empty, displays nothing", () => {
-    cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
+    cy.mount(
+      <Chat name="Test" messages={[]} socket={socketMock} userId={"12345678"} />
+    );
 
     cy.get('[data-cy="chat-messages"]').should("not.contain.text");
   });
 
   it("displays all messages given as props", () => {
-    cy.mount(<Chat name="Test" messages={messages} socket={socketMock} />);
+    cy.mount(
+      <Chat
+        name="Test"
+        messages={messages}
+        socket={socketMock}
+        userId={"12345678"}
+      />
+    );
 
     cy.get('[data-cy="chat-messages"]').should("contain.text", "firstMessage");
     cy.get('[data-cy="chat-messages"]').should("contain.text", "secondMessage");
     cy.get('[data-cy="chat-messages"]').should("contain.text", "thirdMessage");
   });
 
-  it("has an input box and a submit button", () => {
-    cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
+  it("styles messages from others differently", () => {
+    cy.mount(
+      <Chat
+        name="Test"
+        messages={messages}
+        socket={socketMock}
+        userId={"12345678"}
+      />
+    );
 
-    cy.get('[data-cy="chat-input"]').should("be.visible");
-    cy.get('[data-cy="chat-submit"]').should("be.visible");
+    cy.get(".chat-message-self")
+      .should("contain.text", "firstMessage")
+      .and("contain.text", "thirdMessage");
+    cy.get(".chat-message").should("contain.text", "secondMessage");
+
+    cy.mount(
+      <Chat
+        name="Test"
+        messages={messages}
+        socket={socketMock}
+        userId={"87654321"}
+      />
+    );
+
+    cy.get(".chat-message")
+      .should("contain.text", "firstMessage")
+      .and("contain.text", "thirdMessage");
+    cy.get(".chat-message-self").should("contain.text", "secondMessage");
   });
 
-  it("sends a message when clicking submit", () => {
-    cy.spy(socketMock, "send").as("socketMock");
+  describe("message input", () => {
+    it("has an input box and a submit button", () => {
+      cy.mount(
+        <Chat
+          name="Test"
+          messages={[]}
+          socket={socketMock}
+          userId={"12345678"}
+        />
+      );
 
-    cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
+      cy.get('[data-cy="chat-input"]').should("be.visible");
+      cy.get('[data-cy="chat-submit"]').should("be.visible");
+    });
 
-    cy.get('[data-cy="chat-input"]').type("testMessage");
-    cy.get('[data-cy="chat-submit"]').click();
+    it("sends a message when clicking submit", () => {
+      cy.spy(socketMock, "send").as("socketMock");
 
-    cy.get("@socketMock").should("be.calledWith", '{"message":"testMessage"}');
-  });
+      cy.mount(
+        <Chat
+          name="Test"
+          messages={[]}
+          socket={socketMock}
+          userId={"12345678"}
+        />
+      );
 
-  it("sets the message input blank after sumbitting", () => {
-    cy.mount(<Chat name="Test" messages={[]} socket={socketMock} />);
+      cy.get('[data-cy="chat-input"]').type("testMessage");
+      cy.get('[data-cy="chat-submit"]').click();
 
-    cy.get('[data-cy="chat-input"]').type("testMessage");
-    cy.get('[data-cy="chat-submit"]').click();
+      cy.get("@socketMock").should(
+        "be.calledWith",
+        '{"message":"testMessage"}'
+      );
+    });
 
-    cy.get('[data-cy="chat-input"]').invoke("val").should("equal", "");
+    it("sets the message input blank after sumbitting", () => {
+      cy.mount(
+        <Chat
+          name="Test"
+          messages={[]}
+          socket={socketMock}
+          userId={"12345678"}
+        />
+      );
+
+      cy.get('[data-cy="chat-input"]').type("testMessage");
+      cy.get('[data-cy="chat-submit"]').click();
+
+      cy.get('[data-cy="chat-input"]').invoke("val").should("equal", "");
+    });
   });
 });
