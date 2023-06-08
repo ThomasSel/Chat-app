@@ -15,7 +15,7 @@ const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
   const messagesRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
-    messagesRef?.current.scrollTo({ top: Number.MAX_SAFE_INTEGER });
+    messagesRef?.current.scrollTo({ top: messagesRef?.current.scrollHeight });
   }, [messages]);
 
   const handleSubmit: React.FormEventHandler = (e) => {
@@ -56,26 +56,6 @@ const Chat = ({ name, messages, socket, userId }: ChatProps): JSX.Element => {
                   ))}
                 </>
               )}
-              {/* {messageGroup.map((message) => {
-                if (message.userId === userId) {
-                  return (
-                    <li
-                      key={`${message.userId}-${message.iat}-${message.text[0]}`}
-                    >
-                      <div className="chat-message-self">{message.text}</div>
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li
-                      key={`${message.userId}-${message.iat}-${message.text[0]}`}
-                    >
-                      <div className="message-sender">{message.username}</div>
-                      <div className="chat-message">{message.text}</div>
-                    </li>
-                  );
-                } }
-              })*/}
             </ul>
           );
         })}

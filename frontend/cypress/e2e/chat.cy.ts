@@ -68,5 +68,22 @@ describe("chat page", () => {
         cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
         cy.get('[data-cy="chat-messages"]').should("contain.text", "message 2");
       });
+    console.log(window.sessionStorage.getItem("token"));
+  });
+
+  it("clicking sign out redirects to login and clears sessionStorage", () => {
+    cy.login(email, password);
+
+    cy.visit("/chats").then(() => {
+      expect(window.sessionStorage.getItem("token")).not.equal(null);
+    });
+
+    cy.get('[data-cy="logout"]').click();
+
+    cy.url()
+      .should("contain", "login")
+      .then(() => {
+        expect(window.sessionStorage.getItem("token")).equal(null);
+      });
   });
 });

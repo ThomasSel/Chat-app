@@ -94,7 +94,7 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
         socket={socket}
         userId={userId}
       />
-      <button type="button" onClick={handleLogout}>
+      <button type="button" onClick={handleLogout} data-cy="logout">
         Log out
       </button>
     </main>
