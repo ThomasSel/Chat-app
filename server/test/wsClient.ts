@@ -4,10 +4,29 @@ import jwt from "jsonwebtoken";
 class wsClient {
   socket: ws.WebSocket;
   messages: string[];
+  ready: Promise<void>;
+  closed: Promise<void>;
 
   constructor(address: string) {
     this.socket = new ws.WebSocket(address);
     this.messages = [];
+
+    this.ready = new Promise((resolve, reject) => {
+      const handleClose = (e: ws.ErrorEvent | ws.CloseEvent) => reject();
+      this.socket.addEventListener("error", handleClose);
+      this.socket.addEventListener("close", handleClose);
+
+      this.socket.onopen = (e) => {
+        resolve();
+        this.socket.removeEventListener("error", handleClose);
+        this.socket.removeEventListener("close", handleClose);
+      };
+    });
+
+    this.closed = new Promise((resolve) => {
+      this.socket.addEventListener("error", (e) => resolve());
+      this.socket.addEventListener("close", (e) => resolve());
+    });
   }
 
   get readyState() {
@@ -55,32 +74,11 @@ class wsClient {
   }
 
   waitReady() {
-    return new Promise<void>((resolve, reject) => {
-      const interval = setInterval(() => {
-        switch (this.socket.readyState) {
-          case 0:
-            break;
-          case 1:
-            clearInterval(interval);
-            resolve();
-            break;
-          default:
-            clearInterval(interval);
-            reject(new Error("ws connection is closed"));
-        }
-      }, 10);
-    });
+    return this.ready;
   }
 
   waitClosed() {
-    return new Promise<void>((resolve) => {
-      const interval = setInterval(() => {
-        if (this.socket.readyState === 3) {
-          clearInterval(interval);
-          resolve();
-        }
-      }, 10);
-    });
+    return this.closed;
   }
 }
 
