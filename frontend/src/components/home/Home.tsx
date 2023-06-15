@@ -1,16 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { NavigateFunction } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+
 import Chat from "../chat/Chat";
 
 type HomeProps = {
   navigate: NavigateFunction;
 };
 
+export type Message = {
+  text: string;
+  userId: string;
+  username: string;
+  iat: number;
+};
+
+export const isMessage = (o: object): o is Message => {
+  return "text" in o && "userId" in o && "username" in o && "iat" in o;
+};
+
 const Home = ({ navigate }: HomeProps): JSX.Element => {
   const [token, setToken] = useState<string | null>(
     window.sessionStorage.getItem("token")
   );
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[][]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -26,9 +39,32 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
     });
 
     newSocket.addEventListener("message", async (event) => {
-      const data: Blob | string = event.data;
-      const message = data instanceof Blob ? await data.text() : data;
-      setMessages((prev) => [...prev, message]);
+      const streamData: Blob | string = event.data;
+      const messageString =
+        streamData instanceof Blob ? await streamData.text() : streamData;
+
+      const message = JSON.parse(messageString);
+      if (!isMessage(message)) {
+        return console.error(new Error("Invalid server message"));
+      }
+
+      setMessages((prev) => {
+        if (prev.length === 0) {
+          return [...prev, [message]];
+        }
+
+        const lastMessageGroup = prev[prev.length - 1];
+        const lastMessage = lastMessageGroup[lastMessageGroup.length - 1];
+
+        if (message.userId === lastMessage?.userId) {
+          return [
+            ...prev.slice(0, prev.length - 1),
+            [...lastMessageGroup, message],
+          ];
+        } else {
+          return [...prev, [message]];
+        }
+      });
     });
 
     setSocket(newSocket);
@@ -45,10 +81,20 @@ const Home = ({ navigate }: HomeProps): JSX.Element => {
     navigate("/login");
   };
 
+  let userId: string;
+  if (null !== token) {
+    userId = useMemo<string>(() => jwtDecode<any>(token).userId, [token]);
+  }
+
   return (
     <main>
-      <Chat name="General" messages={messages} socket={socket} />
-      <button type="button" onClick={handleLogout}>
+      <Chat
+        name="General"
+        messages={messages}
+        socket={socket}
+        userId={userId}
+      />
+      <button type="button" onClick={handleLogout} data-cy="logout">
         Log out
       </button>
     </main>

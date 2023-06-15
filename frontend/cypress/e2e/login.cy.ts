@@ -53,4 +53,11 @@ describe("Login", () => {
       cy.url().should("not.include", "/chats");
     });
   });
+
+  it("link redirects to signup page", () => {
+    cy.get('[data-cy="signup-link"]')
+      .should("contain.text", "Don't have an account")
+      .click();
+    cy.url().should("contain", "/signup");
+  });
 });

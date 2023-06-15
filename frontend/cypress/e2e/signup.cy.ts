@@ -60,4 +60,11 @@ describe("Signup", () => {
 
     cy.url().should("include", "/signup");
   });
+
+  it("link redirects to login page", () => {
+    cy.get('[data-cy="login-link"]')
+      .should("contain.text", "Already have an account")
+      .click();
+    cy.url().should("contain", "/login");
+  });
 });

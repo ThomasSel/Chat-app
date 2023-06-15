@@ -58,8 +58,8 @@ describe("chat page", () => {
         "Long message to slow cypress down and give the server time to authenticate ws1 and ws2"
       )
       .then(() => {
-        ws1.send("message 1");
-        ws2.send("message 2");
+        ws1.send(JSON.stringify({ message: "message 1" }));
+        ws2.send(JSON.stringify({ message: "message 2" }));
 
         ws1.close();
         ws2.close();
@@ -67,6 +67,19 @@ describe("chat page", () => {
       .then(() => {
         cy.get('[data-cy="chat-messages"]').should("contain.text", "message 1");
         cy.get('[data-cy="chat-messages"]').should("contain.text", "message 2");
+      });
+    console.log(window.sessionStorage.getItem("token"));
+  });
+
+  it("clicking sign out redirects to login and clears sessionStorage", () => {
+    cy.login(email, password);
+
+    cy.get('[data-cy="logout"]').click();
+
+    cy.url()
+      .should("contain", "login")
+      .then(() => {
+        expect(window.sessionStorage.getItem("token")).equal(null);
       });
   });
 });
